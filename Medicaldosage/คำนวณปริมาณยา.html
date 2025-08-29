@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/5/w3.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <meta charset="UTF-8" />
+  <title>Medical Dosage System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=K2D:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: "K2D", sans-serif;
+      background-color: #CBEAEB; 
+    }
+    .logo-container {
+      position: relative;
+      width: fit-content;
+      margin: 50px 0 0 20px;;
+      text-align: start;
+    }
+    .pills-background {
+      width: 210px;
+      opacity: 0.9;
+      margin-top: -60px;
+      transform: translateX(-25px);
+    }
+    nav {
+      margin-left: auto;
+      display: flex;
+      gap: 30px;
+    }
+    
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 20px;
+      transition: all 0.3s;
+      padding: 8px 16px;
+      border-radius: 8px;
+      position: relative;
+    }
+    
+    nav a:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: translateY(-2px);
+    }
+
+    header {
+      background: linear-gradient(135deg, #39AC95 100%, #2E8B7A 0%);
+      display: flex;
+      align-items: center;
+      padding: 15px 30px;
+      position: relative;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .pill-icon {
+      width: 45px;
+      height: 45px;
+      background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+      border-radius: 22.5px;
+      position: relative;
+      display: inline-block;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    .pill-icon::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 20px;
+      height: 20px;
+      background: white;
+      border-radius: 50%;
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .main-title { 
+      text-align: center; 
+      font-size: 23px; 
+      font-weight: bold; 
+      margin: 32px 0 30px 0; 
+      display: flex; 
+      justify-content: center; 
+      align-items: center; 
+      gap: 10px; 
+      color: #2c3e50; 
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 20px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .section-title {
+      font-size: 20px;
+      font-weight: bold;
+      color: #2c3e50;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .patient-selection {
+      margin-bottom: 30px;
+    }
+
+    .patient-row {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 15px;
+    }
+
+    .patient-label {
+      min-width: 80px;
+      font-weight: 500;
+      color: #2c3e50;
+    }
+
+    .patient-input {
+      flex: 1;
+      padding: 12px 15px;
+      border: none;
+      border-radius: 10px;
+      background: rgba(255, 182, 193, 0.3);
+      font-family: "K2D", sans-serif;
+      font-size: 16px;
+      color: #2c3e50;
+    }
+
+    .patient-input:focus {
+      outline: 2px solid #39AC95;
+      background: rgba(255, 182, 193, 0.5);
+    }
+
+    .select-btn {
+      padding: 8px 20px;
+      background: #e0e0e0;
+      border: none;
+      border-radius: 8px;
+      font-family: "K2D", sans-serif;
+      color: #666;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .select-btn:hover {
+      background: #d0d0d0;
+    }
+
+    .calculation-section {
+      margin-top: 30px;
+    }
+
+    .medicine-cards {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .medicine-card {
+      background: rgba(57, 172, 149, 0.2);
+      border-radius: 15px;
+      padding: 20px;
+      cursor: pointer;
+      transition: all 0.3s;
+      border: 2px solid transparent;
+    }
+
+    .medicine-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      border-color: #39AC95;
+    }
+
+    .medicine-card.selected {
+      background: rgba(57, 172, 149, 0.4);
+      border-color: #39AC95;
+    }
+
+    .card-header {
+      font-weight: bold;
+      color: #2c3e50;
+      margin-bottom: 15px;
+      text-align: center;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(44, 62, 80, 0.2);
+    }
+
+    .medicine-info {
+      background: #edf0f2;
+      border-radius: 6px;
+      padding: 10px;
+      margin-bottom: 8px;
+      color: #2c3e50;
+      text-align: center;
+    }
+
+    .calculate-button {
+      width: 300px;
+      height: 50px;
+      background: #2c3e50;
+      color: white;
+      border: none;
+      border-radius: 25px;
+      font-family: "K2D", sans-serif;
+      font-size: 18px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: block;
+      margin: 30px auto;
+    }
+
+    .calculate-button:hover:not(:disabled) {
+      background: #34495e;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .calculate-button:disabled {
+      background: #95a5a6;
+      cursor: not-allowed;
+    }
+
+    /* Modal for patient selection */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      width: 90%;
+      max-width: 500px;
+      max-height: 70vh;
+      overflow-y: auto;
+    }
+
+    .modal-header {
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 20px;
+      font-weight: bold;
+      color: #2c3e50;
+    }
+
+    .patient-list-item {
+      padding: 15px;
+      margin: 10px 0;
+      background: rgba(57, 172, 149, 0.1);
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s;
+      border: 2px solid transparent;
+    }
+
+    .patient-list-item:hover {
+      background: rgba(57, 172, 149, 0.2);
+      border-color: #39AC95;
+    }
+
+    .close-modal {
+      background: #e74c3c;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 20px;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .selected-drug-info {
+      background: rgba(57, 172, 149, 0.1);
+      border: 2px solid #39AC95;
+      border-radius: 12px;
+      padding: 20px;
+      margin: 20px 0;
+      text-align: left;
+    }
+
+    .selected-drug-name {
+      font-size: 18px;
+      font-weight: bold;
+      color: #2c3e50;
+      margin-bottom: 10px;
+    }
+
+    .selected-drug-details {
+      color: #666;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .drug-detail-row {
+      margin-bottom: 5px;
+    }
+
+    .drug-label {
+      font-weight: 600;
+      color: #39AC95;
+    }
+
+    .no-data-message {
+      text-align: center;
+      padding: 30px;
+      color: #7f8c8d;
+      font-size: 16px;
+    }
+
+    .no-data-message i {
+      font-size: 48px;
+      margin-bottom: 15px;
+      display: block;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .medicine-cards {
+        grid-template-columns: 1fr;
+      }
+      
+      .patient-row {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      
+      .patient-label {
+        min-width: auto;
+        margin-bottom: 5px;
+      }
+    }
+  </style>
+</head>
+<body>
+<header>
+  <div class="logo-container">
+    <img src="logopj.png" alt="Pills" class="pills-background">
+  </div>
+  <nav>
+    <a href="หน้าหลัก.html">หน้าหลัก</a>
+    <a href="จัดการข้อมูลผู้ป่วย.html">จัดการข้อมูลผู้ป่วย</a>
+    <a href="ข้อมูลยา.html">ข้อมูลยา</a>
+    <a href="คำนวณปริมาณยา.html">คำนวณปริมาณยา</a>
+    <a href="history.html">ประวัติการคำนวณยา</a>
+  </nav>
+</header>
+
+<div class="main-title">
+    <i class="fa fa-calculator"></i>
+    <div class="title">คำนวณปริมาณยา</div>
+</div>
+
+<div class="container">
+  <div class="section-header">
+    <div class="section-title">
+      <i class="fa fa-user"></i>
+      <span>ข้อมูลคนไข้</span>
+    </div>
+  </div>
+
+  <!-- แสดงข้อมูลยาที่เลือกจากหน้าก่อน (ถ้ามี) -->
+  <div id="selectedDrugDisplay" style="display: none;">
+    <div class="selected-drug-info">
+      <div class="selected-drug-name" id="preSelectedDrugName"></div>
+      <div class="selected-drug-details">
+        <div class="drug-detail-row">
+          <span class="drug-label">สารสำคัญ:</span> <span id="preSelectedDrugIngredient"></span>
+        </div>
+        <div class="drug-detail-row">
+          <span class="drug-label">ประเภท:</span> <span id="preSelectedDrugType"></span>
+        </div>
+        <div class="drug-detail-row">
+          <span class="drug-label">ความถี่:</span> <span id="preSelectedDrugFreq"></span>
+        </div>
+        <div class="drug-detail-row">
+          <span class="drug-label">ขนาดยา:</span> <span id="preSelectedDrugDosage"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="patient-selection">
+    <div class="patient-row">
+      <span class="patient-label">ผู้ป่วย:</span>
+      <input type="text" id="patientName" class="patient-input" placeholder="เลือกผู้ป่วย..." readonly>
+      <button class="select-btn" onclick="openPatientModal()">เลือก</button>
+    </div>
+    
+    <div class="patient-row">
+      <span class="patient-label">ยา:</span>
+      <input type="text" id="medicineInput" class="patient-input" placeholder="เลือกยา..." readonly>
+      <button class="select-btn" onclick="openMedicineModal()">เลือก</button>
+    </div>
+  </div>
+
+  <div class="calculation-section">
+    <div class="section-title">
+      <span>คำนวณปริมาณยา</span>
+    </div>
+
+    <div class="medicine-cards">
+      <div class="medicine-card" onclick="selectMedicine(1)" id="medicine-1">
+        <div class="card-header">ข้อมูลผู้ป่วย</div>
+        <div class="medicine-info">ชื่อ: <span id="displayName">-</span></div>
+        <div class="medicine-info">อายุ: <span id="displayAge">-</span></div>
+        <div class="medicine-info">น้ำหนัก: <span id="displayWeight">-</span></div>
+      </div>
+
+      <div class="medicine-card" onclick="selectMedicine(2)" id="medicine-2">
+        <div class="card-header">ข้อมูลยา</div>
+        <div class="medicine-info">ชื่อยา: <span id="selectedMedicineName">-</span></div>
+        <div class="medicine-info">ประเภท: <span id="selectedMedicineType">-</span></div>
+        <div class="medicine-info">ความถี่: <span id="selectedMedicineFreq">-</span></div>
+      </div>
+    </div>
+
+    <button class="calculate-button" id="calculateBtn" onclick="calculateDosage()" disabled>
+      คำนวณปริมาณยา
+    </button>
+  </div>
+</div>
+
+<!-- Patient Selection Modal -->
+<div id="patientModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">เลือกผู้ป่วย</div>
+    <div id="patientList"></div>
+    <button class="close-modal" onclick="closePatientModal()">ปิด</button>
+  </div>
+</div>
+
+<!-- Medicine Selection Modal -->
+<div id="medicineModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">เลือกยา</div>
+    <div id="medicineList"></div>
+    <button class="close-modal" onclick="closeMedicineModal()">ปิด</button>
+  </div>
+</div>
+
+<script>
+let selectedPatient = null;
+let selectedMedicine = null;
+
+// ข้อมูลยาตัวอย่าง
+const availableMedicines = [
+  { 
+    name: "พาราเซตามอล (Paracetamol)", 
+    type: "ยาแก้ปวด ลดไข้", 
+    frequency: "3-4 ครั้ง/วัน", 
+    dosage: "500-1000mg", 
+    activeIngredient: "Paracetamol 500mg" 
+  },
+  { 
+    name: "ไอบูโพรเฟน (Ibuprofen)", 
+    type: "ยาต้านการอักเสบ", 
+    frequency: "2-3 ครั้ง/วัน", 
+    dosage: "200-400mg", 
+    activeIngredient: "Ibuprofen 200mg" 
+  },
+  { 
+    name: "อะม็อกซิซิลลิน (Amoxicillin)", 
+    type: "ยาปฏิชีวนะ", 
+    frequency: "3 ครั้ง/วัน", 
+    dosage: "250-500mg", 
+    activeIngredient: "Amoxicillin 250mg" 
+  },
+  { 
+    name: "เซฟาเล็กซิน (Cefalexin)", 
+    type: "ยาปฏิชีวนะ", 
+    frequency: "4 ครั้ง/วัน", 
+    dosage: "250-500mg", 
+    activeIngredient: "Cefalexin 250mg" 
+  },
+  { 
+    name: "โอเมพราโซล (Omeprazole)", 
+    type: "ยารักษากรดไหลย้อน", 
+    frequency: "1-2 ครั้ง/วัน", 
+    dosage: "20-40mg", 
+    activeIngredient: "Omeprazole 20mg" 
+  }
+];
+
+// โหลดเมื่อหน้าเว็บโหลดเสร็จ
+document.addEventListener('DOMContentLoaded', function() {
+  // โหลดข้อมูลยาจาก localStorage หากมี
+  loadMedicinesFromStorage();
+  
+  console.log('หน้าคำนวณปริมาณยาโหลดเสร็จแล้ว');
+});
+
+function loadMedicinesFromStorage() {
+  const storedMedicines = JSON.parse(localStorage.getItem("medicines")) || [];
+  if (storedMedicines.length > 0) {
+    // ผสมข้อมูลยาจาก localStorage กับข้อมูลตัวอย่าง
+    availableMedicines.push(...storedMedicines.filter(stored => 
+      !availableMedicines.some(default_med => default_med.name === stored.name)
+    ));
+  }
+}
+
+function openPatientModal() {
+  // ดึงข้อมูลผู้ป่วยจาก localStorage
+  const patients = JSON.parse(localStorage.getItem("patients")) || [];
+  const patientList = document.getElementById("patientList");
+  
+  if (patients.length === 0) {
+    patientList.innerHTML = `
+      <div class="no-data-message">
+        <i class="fa fa-user-times"></i>
+        <div>ไม่มีข้อมูลผู้ป่วย</div>
+        <div style="margin-top: 10px;">
+          <a href="first.html" style="color: #39AC95; text-decoration: underline;">
+            กรุณาเพิ่มข้อมูลผู้ป่วยก่อน
+          </a>
+        </div>
+      </div>
+    `;
+  } else {
+    patientList.innerHTML = "";
+    patients.forEach((patient, index) => {
+      const div = document.createElement("div");
+      div.className = "patient-list-item";
+      div.innerHTML = `
+        <strong>${patient.name}</strong><br>
+        <small>อายุ: ${patient.age} ปี | น้ำหนัก: ${patient.weight} กก.</small>
+      `;
+      div.onclick = () => selectPatient(patient, index);
+      patientList.appendChild(div);
+    });
+  }
+  
+  document.getElementById("patientModal").style.display = "flex";
+}
+
+function closePatientModal() {
+  document.getElementById("patientModal").style.display = "none";
+}
+
+function selectPatient(patient, index) {
+  selectedPatient = patient;
+  
+  // Update input fields
+  document.getElementById("patientName").value = patient.name;
+  
+  // Update display in card
+  document.getElementById("displayName").textContent = patient.name;
+  document.getElementById("displayAge").textContent = patient.age + " ปี";
+  document.getElementById("displayWeight").textContent = patient.weight + " กก.";
+  
+  // Highlight patient card
+  document.getElementById("medicine-1").classList.add("selected");
+  
+  closePatientModal();
+  updateCalculateButton();
+  
+  console.log('เลือกผู้ป่วย:', patient.name);
+}
+
+function selectMedicine(cardNum) {
+  if (cardNum === 1) {
+    // Patient info card - open patient modal
+    openPatientModal();
+  } else if (cardNum === 2) {
+    // Medicine card - open medicine selection
+    openMedicineModal();
+  }
+}
+
+function openMedicineModal() {
+  const medicineList = document.getElementById("medicineList");
+  medicineList.innerHTML = "";
+  
+  if (availableMedicines.length === 0) {
+    medicineList.innerHTML = `
+      <div class="no-data-message">
+        <i class="fa fa-medkit"></i>
+        <div>ไม่มีข้อมูลยา</div>
+        <div style="margin-top: 10px;">
+          <a href="second.html" style="color: #39AC95; text-decoration: underline;">
+            กรุณาเพิ่มข้อมูลยาก่อน
+          </a>
+        </div>
+      </div>
+    `;
+  } else {
+    availableMedicines.forEach((medicine) => {
+      const div = document.createElement("div");
+      div.className = "patient-list-item";
+      div.innerHTML = `
+        <strong>${medicine.name}</strong><br>
+        <small>ประเภท: ${medicine.type || '-'}<br>
+        ความถี่: ${medicine.frequency || '-'}</small>
+      `;
+      div.onclick = () => selectMedicineFromModal(medicine);
+      medicineList.appendChild(div);
+    });
+  }
+  
+  document.getElementById("medicineModal").style.display = "flex";
+}
+
+function closeMedicineModal() {
+  document.getElementById("medicineModal").style.display = "none";
+}
+
+function selectMedicineFromModal(medicine) {
+  selectedMedicine = medicine;
+  
+  // Update input field
+  document.getElementById('medicineInput').value = medicine.name;
+  
+  // Update display in card
+  document.getElementById("selectedMedicineName").textContent = medicine.name;
+  document.getElementById("selectedMedicineType").textContent = medicine.type || '-';
+  document.getElementById("selectedMedicineFreq").textContent = medicine.frequency || '-';
+  
+  // Highlight selected medicine card
+  document.getElementById("medicine-2").classList.add("selected");
+  
+  closeMedicineModal();
+  updateCalculateButton();
+  
+  console.log('เลือกยา:', medicine.name);
+}
+
+function updateCalculateButton() {
+  const btn = document.getElementById("calculateBtn");
+  if (selectedPatient && selectedMedicine) {
+    btn.disabled = false;
+    btn.style.background = "#2c3e50";
+  } else {
+    btn.disabled = true;
+    btn.style.background = "#95a5a6";
+  }
+}
+
+
+function calculateDosage() {
+  if (!selectedPatient || !selectedMedicine) {
+    alert("กรุณาเลือกผู้ป่วยและยาก่อน");
+    return;
+  }
+
+  const weight = parseFloat(selectedPatient.weight);
+  const age = parseInt(selectedPatient.age);
+  
+  let dosagePerKg = 10;
+  let dailyDoses = 3;
+
+  if (selectedMedicine.name.includes("พาราเซตามอล")) {
+    dosagePerKg = 15;
+    dailyDoses = 4;
+  } else if (selectedMedicine.name.includes("ไอบูโพรเฟน")) {
+    dosagePerKg = 10;
+    dailyDoses = 3;
+  } else if (selectedMedicine.name.includes("อะม็อกซิซิลลิน")) {
+    dosagePerKg = 25;
+    dailyDoses = 3;
+  }
+
+  if (age < 2) dosagePerKg *= 0.8;
+  else if (age > 65) dosagePerKg *= 0.9;
+
+  const totalDailyDose = weight * dosagePerKg;
+  const dosePerTime = totalDailyDose / dailyDoses;
+
+  const dosageResult = {
+    totalDailyDose: totalDailyDose.toFixed(2),
+    dosePerTime: dosePerTime.toFixed(2),
+    dailyDoses: dailyDoses,
+    dosagePerKg: dosagePerKg.toFixed(1)
+  };
+  
+  saveCalculation(selectedPatient, selectedMedicine, dosageResult);
+
+  window.location.href = 'ผลคำนวณ.html';
+}
+
+function saveCalculation(patient, medicine, dosageResult) {
+  const history = JSON.parse(localStorage.getItem('calculationHistory')) || [];
+  
+  const record = {
+    timestamp: new Date().toISOString(),
+    patient: { name: patient.name || 'ไม่ระบุ', id: patient.id || '' },
+    medicine: { name: medicine.name || 'ไม่ระบุ', frequency: medicine.frequency || '' },
+    dosageResult: { dosePerTime: dosageResult.dosePerTime, totalDose: dosageResult.totalDailyDose }
+  };
+
+  history.push(record);
+  localStorage.setItem('calculationHistory', JSON.stringify(history));
+  localStorage.setItem('latestCalculation', JSON.stringify(history[history.length - 1]));
+}
+</script>
+</body>
+</html>
