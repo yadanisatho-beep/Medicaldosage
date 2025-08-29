@@ -98,7 +98,6 @@
     .btn-delete {
       background: #e74c3c;
     }
-    /* popup */
     .modal {
       display: none;
       position: fixed;
@@ -148,11 +147,11 @@
     <img src="logopj.png" alt="Pills" class="pills-background">
   </div>
   <nav>
-    <a href="test.html">หน้าหลัก</a>
-    <a href="first.html">จัดการข้อมูลผู้ป่วย</a>
-    <a href="second.html">ข้อมูลยา</a>
-    <a href="third.html">คำนวณปริมาณยา</a>
-    <a href="fourth.html">ประวัติการคำนวณยา</a>
+    <a href="homepage.html">หน้าหลัก</a>
+    <a href="managepatientdata.html">จัดการข้อมูลผู้ป่วย</a>
+    <a href="medicine.html">ข้อมูลยา</a>
+    <a href="calculatemed.html">คำนวณปริมาณยา</a>
+    <a href="history.html">ประวัติการคำนวณยา</a>
   </nav>
 </header>
 <div class="main-title">
@@ -161,19 +160,15 @@
 </div>   
 <div class="container">
   
-  <!-- บล็อกค้นหา -->
   <input type="text" id="search" placeholder="ค้นหาชื่อผู้ป่วย..." onkeyup="renderPatients()">
   
-  <!-- ลิสต์รายชื่อ -->
   <div id="list"></div>
 
-  <!-- ปุ่มเพิ่ม -->
   <div style="text-align:center; margin-top:20px;">
-    <a href="first.html"><button>+ เพิ่มข้อมูลผู้ป่วย</button></a>
+    <a href="managepatientdata.html"><button>+ เพิ่มข้อมูลผู้ป่วย</button></a>
   </div>
 </div>
 
-<!-- popup modal -->
 <div id="editModal" class="modal">
   <div class="modal-content">
     <h3>แก้ไขข้อมูลผู้ป่วย</h3>

@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/5/w3.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <meta charset="UTF-8" />
+  <title>Medical Dosage System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=K2D:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: "K2D", sans-serif;
+      background-color: #CBEAEB; 
+    }
+    .logo-container {
+      position: relative;
+      width: fit-content;
+      margin: 50px 0 0 20px;;
+      text-align: start;
+    }
+    .pills-background {
+      width: 210px; 
+      opacity: 0.9;
+      margin-top: -60px;
+      transform: translateX(-25px);
+    }
+    
+    nav {
+      margin-left: auto;
+      display: flex;
+      gap: 30px;
+    }
+    
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 20px;
+      transition: all 0.3s;
+      padding: 8px 16px;
+      border-radius: 8px;
+      position: relative;
+    }
+    
+    nav a:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: translateY(-2px);
+    }
+
+    header {
+      background: linear-gradient(135deg, #39AC95 100%, #2E8B7A 0%);
+      display: flex;
+      align-items: center;
+      padding: 15px 30px;
+      position: relative;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .main-title {
+      text-align: center;
+      font-size: 23px;
+      font-weight: bold;
+      margin-top: 32px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 15px;
+      color: #2c3e50;
+    }
+    
+    input[type="text"], input[type="number"] {
+      border: none;
+      box-shadow: 1px 1px 4px #96a1ac;
+      width: 100%;
+      padding: 10px;
+    }
+
+    .centered-container {
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 30px;
+      color: #2c3e50;
+    }
+
+  </style>
+  </head>
+<body>
+<header>
+  <div class="logo-container">
+    <img src="logopj.png" alt="Pills" class="pills-background">
+  </div>
+  <nav>
+    <a href="homepage.html">หน้าหลัก</a>
+    <a href="managepatientdata.html">จัดการข้อมูลผู้ป่วย</a>
+    <a href="medicine.html">ข้อมูลยา</a>
+    <a href="calculatemed.html">คำนวณปริมาณยา</a>
+    <a href="history.html">ประวัติการคำนวณยา</a>
+  </nav>
+</header>
+<div class="main-title">
+    <i class="fa fa-file"></i>
+    <div class="title">จัดการข้อมูลผู้ป่วย</div>
+</div>
+<div class="centered-container">
+    <div class="w3-row w3-padding-small" style="display: flex; gap: 10px; margin-bottom: 20px; justify-content: center;">
+        <a href="จัดการข้อมูลผู้ป่วย.html" style="text-decoration: none;">
+            <div style="background-color: #D1F0F2; padding: 10px 20px; border-radius: 20px; box-shadow: 2px 2px 5px #ccc; font-weight: bold;">
+                + เพิ่มข้อมูลผู้ป่วยใหม่
+            </div>
+        </a>
+        <a href="patient_list.html" style="text-decoration: none;">
+            <div style="background-color: #FCE4E4; padding: 10px 20px; border-radius: 20px; box-shadow: 2px 2px 5px #ccc; font-weight: bold;">
+                รายชื่อผู้ป่วย
+            </div>
+        </a>
+    </div>
+
+  <p style="margin-top: 43px; font-weight: bold; text-align: center;">+ เพิ่มข้อมูลผู้ป่วยใหม่</p>
+  <p style="color: gray; text-align: center;">กรอกข้อมูลพื้นฐานของผู้ป่วย</p>
+
+  <form id="patientForm" class="w3-container" style="max-width: 600px; margin: 0 auto;">
+
+  <label style="font-weight: bold;">
+    <i class="fa fa-users"></i> ชื่อผู้ป่วย
+  </label>
+  <input id="name" class="w3-input w3-round w3-white" type="text" placeholder="กรอกชื่อ - นามสกุล" required>
+
+  <div class="w3-row" style="margin-top: 20px;">
+
+    <div class="w3-col s6" style="padding-right: 8px;">
+      <label style="font-weight: bold;">
+        <i class="fa fa-calendar"></i> อายุ (ปี)
+      </label>
+      <input id="age" class="w3-input w3-round w3-white" type="number" min="0" placeholder="0">
+    </div>
+
+    <div class="w3-col s6" style="padding-left: 8px;">
+      <label style="font-weight: bold;">
+        <i class="fa fa-balance-scale"></i> น้ำหนัก (กิโลกรัม)
+      </label>
+      <input id="weight" class="w3-input w3-round w3-white" type="number" step="0.1" min="0" placeholder="0.0">
+    </div>
+  </div>
+
+  <div class="w3-center" style="margin-top: 30px;">
+    <button class="5w3-button w3-black w3-round-large w3-hover-opacity" type="submit">
+      บันทึกข้อมูล
+    </button>
+  </div>
+</form>
+
+<script>
+  document.getElementById("patientForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    let name = document.getElementById("name").value;
+    let age = document.getElementById("age").value;
+    let weight = document.getElementById("weight").value;
+
+    let patients = JSON.parse(localStorage.getItem("patients")) || [];
+
+    patients.push({ name, age, weight });
+
+    localStorage.setItem("patients", JSON.stringify(patients));
+
+    window.location.href = "patient_list.html";
+  });
+</script>
+    </div>
+  </form>
+</div>

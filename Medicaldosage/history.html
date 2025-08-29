@@ -400,14 +400,13 @@
     <img src="logopj.png" alt="Pills" class="pills-background">
   </div>
   <nav>
-    <a href="หน้าหลัก.html">หน้าหลัก</a>
-    <a href="จัดการข้อมูลผู้ป่วย.html">จัดการข้อมูลผู้ป่วย</a>
-    <a href="ข้อมูลยา.html">ข้อมูลยา</a>
-    <a href="คำนวณปริมาณยา.html">คำนวณปริมาณยา</a>
+    <a href="homepage.html">หน้าหลัก</a>
+    <a href="managepatientdata.html">จัดการข้อมูลผู้ป่วย</a>
+    <a href="medicine.html">ข้อมูลยา</a>
+    <a href="calculatemed.html">คำนวณปริมาณยา</a>
     <a href="history.html">ประวัติการคำนวณยา</a>
   </nav>
 </header>
-
 <div class="content-wrapper">
   <div class="main-title">
     <i class="fa fa-history"></i>
@@ -653,6 +652,13 @@ function formatDateTime(timestamp) {
   });
 }
 
+function getLocalDateString(date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
 function handleSearch() {
   const searchText = document.getElementById('searchInput').value.trim().toLowerCase();
   const searchDate = document.getElementById('dateInput').value;
@@ -669,8 +675,19 @@ function handleSearch() {
   if (searchDate) {
     data = data.filter(record => {
       if (!record.timestamp) return false;
-      const recordDate = new Date(record.timestamp).toISOString().split('T')[0];
-      return recordDate === searchDate;
+      
+      try {
+        const recordDate = new Date(record.timestamp);
+        if (isNaN(recordDate.getTime())) return false;
+        
+  
+        const recordDateString = getLocalDateString(recordDate);
+        
+        return recordDateString === searchDate;
+      } catch (error) {
+        console.error('Error comparing dates:', error);
+        return false;
+      }
     });
   }
   
