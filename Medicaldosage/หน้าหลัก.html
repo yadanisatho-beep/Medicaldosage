@@ -14,6 +14,7 @@
       background-color: #CBEAEB; 
     }
     
+    /* Header และ Logo */
     header {
       background: linear-gradient(135deg, #39AC95 100%, #2E8B7A 0%);
       display: flex;
@@ -31,7 +32,7 @@
   }
 
   .pills-background {
-    width: 210px; 
+    width: 210px; /* ปรับขนาดตามภาพจริง */
     opacity: 0.9;
     margin-top: -60px;
     transform: translateX(-25px);
@@ -119,7 +120,6 @@
       border-radius: 22.5px;
       position: relative;
       display: inline-block;
-      animation: float 3s ease-in-out infinite;
     }
     
     .pill-icon::before {
@@ -236,6 +236,7 @@
       align-items: center;
       position: relative;
       overflow: hidden;
+      text-decoration: none;
     }
     
     .action-box::before {
@@ -253,6 +254,7 @@
       left: 100%;
     }
     
+    /* สีต่างๆ สำหรับแต่ละปุ่ม */
     .action-box:nth-child(1) {
       background: linear-gradient(135deg, #39AC95 0%, #2E8B7A 100%);
       color: white;
@@ -293,6 +295,7 @@
       transform: scale(1.1) rotate(10deg);
     }
     
+    /* CSS Icons สำหรับ action boxes */
     .patient-icon {
       width: 40px;
       height: 40px;
@@ -422,6 +425,7 @@
       line-height: 1.4;
     }
     
+    /* สีข้อความรายละเอียดตามพื้นหลัง */
     .action-box:nth-child(1) .action-desc,
     .action-box:nth-child(4) .action-desc {
       color: rgba(255, 255, 255, 0.95);
@@ -431,6 +435,7 @@
       color: rgba(44, 62, 80, 0.8);
     }
     
+    /* ขั้นตอน */
     .steps {
       display: flex;
       flex-direction: column;
@@ -460,6 +465,11 @@
       100% { box-shadow: 0 4px 15px rgba(255, 235, 59, 0.4); }
     }
     
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+    
     .step-item {
       display: flex;
       align-items: flex-start;
@@ -481,6 +491,7 @@
       font-weight: 500;
     }
     
+    /* Responsive */
     @media (max-width: 768px) {
       .container {
         grid-template-columns: 1fr;
@@ -519,11 +530,11 @@
     <img src="logopj.png" alt="Pills" class="pills-background">
   </div>
   <nav>
-    <a href="test.html">หน้าหลัก</a>
-    <a href="first.html">จัดการข้อมูลผู้ป่วย</a>
-    <a href="second.html">ข้อมูลยา</a>
-    <a href="third.html">คำนวณปริมาณยา</a>
-    <a href="fourth.html">ประวัติการคำนวณยา</a>
+    <a href="หน้าหลัก.html">หน้าหลัก</a>
+    <a href="จัดการข้อมูลผู้ป่วย.html">จัดการข้อมูลผู้ป่วย</a>
+    <a href="ข้อมูลยา.html">ข้อมูลยา</a>
+    <a href="คำนวณปริมาณยา.html">คำนวณปริมาณยา</a>
+    <a href="history.html">ประวัติการคำนวณยา</a>
   </nav>
 </header>
 
@@ -534,6 +545,7 @@
 <div style="text-align:center; font-size: 19px; margin-top:5px; font-weight:600; color: #7f8c8d;">Medical Dosage System</div>
 
 <div class="container">
+  <!-- ขั้นตอนด้านซ้าย -->
   <div class="steps-container">
     <div class="header">
       <div class="location-icon"></div>
@@ -567,40 +579,41 @@
     </div>
   </div>
 
+  <!-- การดำเนินการด่วน -->
   <div class="actions">
     <div class="header-title">
       <div class="play-icon"></div>
       การดำเนินการด่วน
     </div>
     <div class="grid-box">
-      <div class="action-box">
+      <a href="จัดการข้อมูลผู้ป่วย.html" class="action-box">
         <div class="icon">
           <div class="patient-icon"></div>
         </div>
         <span>เพิ่มผู้ป่วยใหม่</span>
         <div class="action-desc">ลงทะเบียนผู้ป่วยใหม่เข้าสู่ระบบ</div>
-      </div>
-      <div class="action-box">
+      </a>
+      <a href="ข้อมูลยา.html" class="action-box">
         <div class="icon">
           <div class="search-icon"></div>
         </div>
         <span>ค้นหา</span>
-        <div class="action-desc">เซิร์ชหาข้อมูลที่ต้องการ</div>
-      </div>
-      <div class="action-box">
+        <div class="action-desc">ค้นหาข้อมูลยา</div>
+      </a>
+      <a href="คำนวณปริมาณยา.html" class="action-box">
         <div class="icon">
           <div class="calculator-icon"></div>
         </div>
         <span>คำนวณปริมาณยา</span>
         <div class="action-desc">คำนวณปริมาณยาสำหรับผู้ป่วย</div>
-      </div>
-      <div class="action-box">
+      </a>
+      <a href="history.html" class="action-box">
         <div class="icon">
           <div class="history-icon"></div>
         </div>
         <span>ประวัติ</span>
         <div class="action-desc">ตรวจประวัติการคำนวณ</div>
-      </div>
+      </a>
     </div>
   </div>
 </div>

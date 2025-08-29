@@ -28,7 +28,7 @@
       text-align: start;
     }
     .pills-background {
-      width: 210px; 
+      width: 210px;
       opacity: 0.9;
       margin-top: -60px;
       transform: translateX(-25px);
@@ -98,7 +98,7 @@
     .btn-delete {
       background: #e74c3c;
     }
-
+    /* popup */
     .modal {
       display: none;
       position: fixed;
@@ -161,15 +161,19 @@
 </div>   
 <div class="container">
   
+  <!-- บล็อกค้นหา -->
   <input type="text" id="search" placeholder="ค้นหาชื่อผู้ป่วย..." onkeyup="renderPatients()">
   
+  <!-- ลิสต์รายชื่อ -->
   <div id="list"></div>
 
+  <!-- ปุ่มเพิ่ม -->
   <div style="text-align:center; margin-top:20px;">
     <a href="first.html"><button>+ เพิ่มข้อมูลผู้ป่วย</button></a>
   </div>
 </div>
 
+<!-- popup modal -->
 <div id="editModal" class="modal">
   <div class="modal-content">
     <h3>แก้ไขข้อมูลผู้ป่วย</h3>

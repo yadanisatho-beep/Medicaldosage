@@ -276,11 +276,11 @@
     <img src="logopj.png" alt="Pills" class="pills-background">
   </div>
   <nav>
-    <a href="test.html">หน้าหลัก</a>
-    <a href="first.html">จัดการข้อมูลผู้ป่วย</a>
-    <a href="second.html">ข้อมูลยา</a>
-    <a href="third.html">คำนวณปริมาณยา</a>
-    <a href="fourth.html">ประวัติการคำนวณยา</a>
+    <a href="หน้าหลัก.html">หน้าหลัก</a>
+    <a href="จัดการข้อมูลผู้ป่วย.html">จัดการข้อมูลผู้ป่วย</a>
+    <a href="ข้อมูลยา.html">ข้อมูลยา</a>
+    <a href="คำนวณปริมาณยา.html">คำนวณปริมาณยา</a>
+    <a href="history.html">ประวัติการคำนวณยา</a>
   </nav>
 </header>
 
@@ -343,8 +343,8 @@
     </div>
 
     <div class="action-buttons">
-      <a href="third.html" class="btn btn-dark">คำนวณใหม่</a>
-      <a href="fourth.html" class="btn btn-secondary">ดูประวัติการคำนวณ</a>
+      <a href="คำนวณปริมาณยา.html" class="btn btn-dark">คำนวณใหม่</a>
+      <a href="history.html" class="btn btn-secondary">ดูประวัติการคำนวณ</a>
     </div>
 </div>
 
@@ -380,8 +380,14 @@ function loadCalculationResult() {
       timestamp: new Date().toISOString()
     };
   }
+  
   displayCalculationResult(data);
+  
+  if (data.patient.name !== 'ไม่มีข้อมูลผู้ป่วย') {
+    saveToHistory(data);
+  }
 }
+
 function displayCalculationResult(data) {
   if (data.patient) {
     document.getElementById('patientDisplayName').textContent = data.patient.name || '-';
@@ -414,55 +420,60 @@ function displayCalculationResult(data) {
   }
 }
 
-function showDefaultData() {
-  const patients = JSON.parse(localStorage.getItem("patients")) || [];
-  const medicines = JSON.parse(localStorage.getItem("medicines")) || [];
-
-  const defaultMedicines = [
-    { 
-      name: "พาราเซตามอล (Paracetamol)", 
-      type: "ยาแก้ปวด ลดไข้", 
-      frequency: "3-4 ครั้ง/วัน", 
-      dosage: "500-1000mg", 
-      activeIngredient: "Paracetamol 500mg" 
-    },
-    { 
-      name: "ไอบูโพรเฟน (Ibuprofen)", 
-      type: "ยาต้านการอักเสบ", 
-      frequency: "2-3 ครั้ง/วัน", 
-      dosage: "200-400mg", 
-      activeIngredient: "Ibuprofen 200mg" 
-    },
-    { 
-      name: "อะม็อกซิซิลลิน (Amoxicillin)", 
-      type: "ยาปฏิชีวนะ", 
-      frequency: "3 ครั้ง/วัน", 
-      dosage: "250-500mg", 
-      activeIngredient: "Amoxicillin 250mg" 
-    }
-  ];
-  document.getElementById('dosePerTime').textContent = 'XX.XX';
-  document.getElementById('dailyDoses').textContent = 'XX.XX';
-  document.getElementById('totalDailyDose').textContent = 'XX.XX';
-}
-
 function saveToHistory(data) {
-  if (!data) return; 
-  const now = new Date();
+  if (!data || !data.patient || !data.medicine) {
+    console.log('No valid data to save to history');
+    return;
+  }
+
   const record = {
-    patient: data.patient || {},
-    medicine: data.medicine || {},
-    dosageResult: data.dosageResult || {},
-    timestamp: new Date().toISOString() 
+    patient: {
+      name: data.patient.name || 'ไม่ระบุ',
+      age: data.patient.age || '',
+      weight: data.patient.weight || ''
+    },
+    medicine: {
+      name: data.medicine.name || 'ไม่ระบุ',
+      type: data.medicine.type || '',
+      frequency: data.medicine.frequency || ''
+    },
+    dosageResult: {
+      dosePerTime: data.dosageResult?.dosePerTime || '',
+      dailyDoses: data.dosageResult?.dailyDoses || '',
+      totalDailyDose: data.dosageResult?.totalDailyDose || ''
+    },
+    timestamp: data.timestamp || new Date().toISOString()
   };
 
-  let history = JSON.parse(localStorage.getItem("calculationHistory")) || [];
-  
-  const lastRecord = history[history.length-1];
-  if (!lastRecord || JSON.stringify(lastRecord) !== JSON.stringify(record)) {
+  let history = [];
+  try {
+    const existingHistory = localStorage.getItem("calculationHistory");
+    if (existingHistory) {
+      history = JSON.parse(existingHistory);
+    }
+  } catch (error) {
+    console.error('Error parsing existing history:', error);
+    history = [];
+  }
+
+  const isDuplicate = history.some(existingRecord => {
+    return existingRecord.patient?.name === record.patient.name &&
+           existingRecord.medicine?.name === record.medicine.name &&
+           Math.abs(new Date(existingRecord.timestamp).getTime() - new Date(record.timestamp).getTime()) < 5000; 
+  });
+
+  if (!isDuplicate) {
     history.push(record);
-    localStorage.setItem("calculationHistory", JSON.stringify(history));
-    localStorage.setItem("latestCalculation", JSON.stringify(record));
+    
+    try {
+      localStorage.setItem("calculationHistory", JSON.stringify(history));
+      localStorage.setItem("latestCalculation", JSON.stringify(record));
+      console.log('Successfully saved to history:', record);
+    } catch (error) {
+      console.error('Error saving to history:', error);
+    }
+  } else {
+    console.log('Duplicate record detected, not saving to history');
   }
 }
 </script>

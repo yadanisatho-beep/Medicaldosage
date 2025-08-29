@@ -248,6 +248,7 @@
       cursor: not-allowed;
     }
 
+    /* Modal for patient selection */
     .modal {
       display: none;
       position: fixed;
@@ -351,6 +352,7 @@
       display: block;
     }
 
+    /* Responsive */
     @media (max-width: 768px) {
       .medicine-cards {
         grid-template-columns: 1fr;
@@ -374,11 +376,11 @@
     <img src="logopj.png" alt="Pills" class="pills-background">
   </div>
   <nav>
-    <a href="test.html">หน้าหลัก</a>
-    <a href="first.html">จัดการข้อมูลผู้ป่วย</a>
-    <a href="second.html">ข้อมูลยา</a>
-    <a href="third.html">คำนวณปริมาณยา</a>
-    <a href="fourth.html">ประวัติการคำนวณยา</a>
+    <a href="หน้าหลัก.html">หน้าหลัก</a>
+    <a href="จัดการข้อมูลผู้ป่วย.html">จัดการข้อมูลผู้ป่วย</a>
+    <a href="ข้อมูลยา.html">ข้อมูลยา</a>
+    <a href="คำนวณปริมาณยา.html">คำนวณปริมาณยา</a>
+    <a href="history.html">ประวัติการคำนวณยา</a>
   </nav>
 </header>
 
@@ -395,6 +397,7 @@
     </div>
   </div>
 
+  <!-- แสดงข้อมูลยาที่เลือกจากหน้าก่อน (ถ้ามี) -->
   <div id="selectedDrugDisplay" style="display: none;">
     <div class="selected-drug-info">
       <div class="selected-drug-name" id="preSelectedDrugName"></div>
@@ -456,6 +459,7 @@
   </div>
 </div>
 
+<!-- Patient Selection Modal -->
 <div id="patientModal" class="modal">
   <div class="modal-content">
     <div class="modal-header">เลือกผู้ป่วย</div>
@@ -464,6 +468,7 @@
   </div>
 </div>
 
+<!-- Medicine Selection Modal -->
 <div id="medicineModal" class="modal">
   <div class="modal-content">
     <div class="modal-header">เลือกยา</div>
@@ -476,6 +481,7 @@
 let selectedPatient = null;
 let selectedMedicine = null;
 
+// ข้อมูลยาตัวอย่าง
 const availableMedicines = [
   { 
     name: "พาราเซตามอล (Paracetamol)", 
@@ -514,7 +520,9 @@ const availableMedicines = [
   }
 ];
 
+// โหลดเมื่อหน้าเว็บโหลดเสร็จ
 document.addEventListener('DOMContentLoaded', function() {
+  // โหลดข้อมูลยาจาก localStorage หากมี
   loadMedicinesFromStorage();
   
   console.log('หน้าคำนวณปริมาณยาโหลดเสร็จแล้ว');
@@ -523,6 +531,7 @@ document.addEventListener('DOMContentLoaded', function() {
 function loadMedicinesFromStorage() {
   const storedMedicines = JSON.parse(localStorage.getItem("medicines")) || [];
   if (storedMedicines.length > 0) {
+    // ผสมข้อมูลยาจาก localStorage กับข้อมูลตัวอย่าง
     availableMedicines.push(...storedMedicines.filter(stored => 
       !availableMedicines.some(default_med => default_med.name === stored.name)
     ));
@@ -530,6 +539,7 @@ function loadMedicinesFromStorage() {
 }
 
 function openPatientModal() {
+  // ดึงข้อมูลผู้ป่วยจาก localStorage
   const patients = JSON.parse(localStorage.getItem("patients")) || [];
   const patientList = document.getElementById("patientList");
   
@@ -569,12 +579,15 @@ function closePatientModal() {
 function selectPatient(patient, index) {
   selectedPatient = patient;
   
+  // Update input fields
   document.getElementById("patientName").value = patient.name;
   
+  // Update display in card
   document.getElementById("displayName").textContent = patient.name;
   document.getElementById("displayAge").textContent = patient.age + " ปี";
   document.getElementById("displayWeight").textContent = patient.weight + " กก.";
   
+  // Highlight patient card
   document.getElementById("medicine-1").classList.add("selected");
   
   closePatientModal();
@@ -585,8 +598,10 @@ function selectPatient(patient, index) {
 
 function selectMedicine(cardNum) {
   if (cardNum === 1) {
+    // Patient info card - open patient modal
     openPatientModal();
   } else if (cardNum === 2) {
+    // Medicine card - open medicine selection
     openMedicineModal();
   }
 }
@@ -631,13 +646,15 @@ function closeMedicineModal() {
 function selectMedicineFromModal(medicine) {
   selectedMedicine = medicine;
   
+  // Update input field
   document.getElementById('medicineInput').value = medicine.name;
   
+  // Update display in card
   document.getElementById("selectedMedicineName").textContent = medicine.name;
   document.getElementById("selectedMedicineType").textContent = medicine.type || '-';
   document.getElementById("selectedMedicineFreq").textContent = medicine.frequency || '-';
   
-
+  // Highlight selected medicine card
   document.getElementById("medicine-2").classList.add("selected");
   
   closeMedicineModal();
@@ -693,10 +710,10 @@ function calculateDosage() {
     dailyDoses: dailyDoses,
     dosagePerKg: dosagePerKg.toFixed(1)
   };
-
+  
   saveCalculation(selectedPatient, selectedMedicine, dosageResult);
 
-  window.location.href = 'result.html';
+  window.location.href = 'ผลคำนวณ.html';
 }
 
 function saveCalculation(patient, medicine, dosageResult) {

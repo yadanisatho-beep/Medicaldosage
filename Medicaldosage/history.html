@@ -360,6 +360,24 @@
       background: #5a6268;
     }
 
+    .success-message {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #28a745;
+      color: white;
+      padding: 15px 25px;
+      border-radius: 10px;
+      z-index: 1001;
+      display: none;
+      animation: slideInRight 0.3s;
+    }
+
+    @keyframes slideInRight {
+      from { transform: translateX(100%); }
+      to { transform: translateX(0); }
+    }
+
     @media (max-width: 768px) {
       .table-header, .table-row {
         grid-template-columns: 1fr;
@@ -382,11 +400,11 @@
     <img src="logopj.png" alt="Pills" class="pills-background">
   </div>
   <nav>
-    <a href="test.html">หน้าหลัก</a>
-    <a href="first.html">จัดการข้อมูลผู้ป่วย</a>
-    <a href="second.html">ข้อมูลยา</a>
-    <a href="third.html">คำนวณปริมาณยา</a>
-    <a href="fourth.html">ประวัติการคำนวณยา</a>
+    <a href="หน้าหลัก.html">หน้าหลัก</a>
+    <a href="จัดการข้อมูลผู้ป่วย.html">จัดการข้อมูลผู้ป่วย</a>
+    <a href="ข้อมูลยา.html">ข้อมูลยา</a>
+    <a href="คำนวณปริมาณยา.html">คำนวณปริมาณยา</a>
+    <a href="history.html">ประวัติการคำนวณยา</a>
   </nav>
 </header>
 
@@ -436,14 +454,17 @@
         <i class="fa fa-search"></i>
         ค้นหา
       </button>
-
+      <button class="btn btn-reset" onclick="resetSearch()">
+        <i class="fa fa-refresh"></i>
+        รีเซ็ต
+      </button>
       <button class="btn btn-clear" onclick="deleteAllHistory()">
         <i class="fa fa-trash"></i>
         ลบทั้งหมด
       </button>
     </div>
   </div>
-
+  
   <div class="history-table">
     <div class="table-header">
       <div>วันที่/เวลา</div>
@@ -457,9 +478,15 @@
       <div class="no-data">
         <i class="fa fa-history" style="font-size: 48px; color: #ccc; margin-bottom: 15px;"></i>
         <div>ไม่มีข้อมูลประวัติการคำนวณ</div>
+        <div style="font-size: 14px; color: #999; margin-top: 5px;">ข้อมูลจะแสดงหลังจากทำการคำนวณปริมาณยา</div>
       </div>
     </div>
   </div>
+</div>
+
+<div id="successMessage" class="success-message">
+  <i class="fa fa-check-circle"></i>
+  <span id="successText">ลบข้อมูลสำเร็จ!</span>
 </div>
 
 <div id="deleteModal" class="modal">
@@ -481,7 +508,7 @@
 <script>
 let deleteIndex = null;
 let deleteType = null;
-let filteredData = null;
+let currentDisplayData = [];
 
 document.addEventListener('DOMContentLoaded', function() {
   loadHistoryData();
@@ -500,6 +527,16 @@ function getCalculationHistory() {
   } catch (error) {
     console.error('Error parsing calculation history:', error);
     return [];
+  }
+}
+
+function saveCalculationHistory(data) {
+  try {
+    localStorage.setItem('calculationHistory', JSON.stringify(data));
+    return true;
+  } catch (error) {
+    console.error('Error saving calculation history:', error);
+    return false;
   }
 }
 
@@ -540,6 +577,7 @@ function updateStats() {
 
 function loadHistoryData() {
   const historyData = getCalculationHistory();
+  currentDisplayData = historyData;
   displayHistory(historyData);
 }
 
@@ -558,12 +596,11 @@ function displayHistory(data) {
   }
   
   let tableHTML = '';
-  const allHistoryData = getCalculationHistory();
   
-  data.slice().reverse().forEach((record, reversedIndex) => {
-    const originalIndex = data === allHistoryData ? 
-      allHistoryData.length - 1 - reversedIndex : 
-      allHistoryData.findIndex(item => JSON.stringify(item) === JSON.stringify(record));
+  const sortedData = [...data].reverse();
+  
+  sortedData.forEach((record, displayIndex) => {
+    const originalIndex = data.length - 1 - displayIndex;
     
     const date = formatDateTime(record.timestamp);
     const patientName = record.patient?.name || 'ไม่ระบุ';
@@ -579,7 +616,7 @@ function displayHistory(data) {
         <div>${dosage}</div>
         <div>${frequency}</div>
         <div>
-          <button class="delete-btn" onclick="showDeleteModal(${originalIndex}, 'single')">
+          <button class="delete-btn" onclick="showDeleteModal(${originalIndex}, 'single')" title="ลบรายการนี้">
             <i class="fa fa-trash"></i>
           </button>
         </div>
@@ -588,6 +625,7 @@ function displayHistory(data) {
   });
   
   tableBody.innerHTML = tableHTML;
+  currentDisplayData = data;
 }
 
 function formatDateTime(timestamp) {
@@ -610,6 +648,7 @@ function formatDateTime(timestamp) {
     day: '2-digit',
     hour: '2-digit', 
     minute: '2-digit',
+    second: '2-digit',
     timeZone: 'Asia/Bangkok'
   });
 }
@@ -635,7 +674,6 @@ function handleSearch() {
     });
   }
   
-  filteredData = data;
   displayHistory(data);
   
   const subtitle = document.querySelector('.subtitle');
@@ -650,7 +688,15 @@ function searchHistory() {
   handleSearch();
 }
 
-
+function resetSearch() {
+  document.getElementById('searchInput').value = '';
+  document.getElementById('dateInput').value = '';
+  loadHistoryData();
+  
+  const subtitle = document.querySelector('.subtitle');
+  const totalRecords = getCalculationHistory().length;
+  subtitle.textContent = `ประวัติการคำนวณยาทั้งหมด ${totalRecords} รายการ`;
+}
 
 function showDeleteModal(index, type) {
   deleteIndex = index;
@@ -660,18 +706,32 @@ function showDeleteModal(index, type) {
   const modalBody = document.getElementById('deleteModalBody');
   
   if (type === 'single') {
+    const historyData = getCalculationHistory();
+    const record = historyData[index];
+    const patientName = record?.patient?.name || 'ไม่ระบุ';
+    const medicineName = record?.medicine?.name || 'ไม่ระบุ';
+    
     modalBody.innerHTML = `
-      <p>คุณต้องการลบรายการนี้หรือไม่?</p>
-      <p style="font-size: 14px; color: #999;">การลบแล้วไม่สามารถกู้คืนได้</p>
+      <p><strong>คุณต้องการลบรายการนี้หรือไม่?</strong></p>
+      <p style="font-size: 14px; color: #666;">ผู้ป่วย: ${patientName}</p>
+      <p style="font-size: 14px; color: #666;">ยา: ${medicineName}</p>
+      <p style="font-size: 12px; color: #dc3545; margin-top: 10px;">⚠️ การลบแล้วไม่สามารถกู้คืนได้</p>
     `;
   } else if (type === 'all') {
+    const totalRecords = getCalculationHistory().length;
     modalBody.innerHTML = `
       <p><strong>คุณต้องการลบประวัติทั้งหมดหรือไม่?</strong></p>
-      <p style="font-size: 14px; color: #dc3545;">⚠️ การดำเนินการนี้จะลบข้อมูลทั้งหมดและไม่สามารถกู้คืนได้</p>
+      <p style="font-size: 14px; color: #666;">จำนวนทั้งหมด: ${totalRecords} รายการ</p>
+      <p style="font-size: 14px; color: #dc3545; font-weight: bold; margin-top: 10px;">⚠️ การดำเนินการนี้จะลบข้อมูลทั้งหมดและไม่สามารถกู้คืนได้</p>
     `;
   }
   
   modal.style.display = 'block';
+  
+  setTimeout(() => {
+    const cancelBtn = modal.querySelector('.modal-btn-cancel');
+    if (cancelBtn) cancelBtn.focus();
+  }, 100);
 }
 
 function closeDeleteModal() {
@@ -683,28 +743,59 @@ function closeDeleteModal() {
 function confirmDelete() {
   if (deleteType === 'single' && deleteIndex !== null) {
     const historyData = getCalculationHistory();
+    
     if (deleteIndex >= 0 && deleteIndex < historyData.length) {
+      const deletedRecord = historyData[deleteIndex];
       historyData.splice(deleteIndex, 1);
-      localStorage.setItem('calculationHistory', JSON.stringify(historyData));
       
-      if (historyData.length === 0) {
-        localStorage.removeItem('latestCalculation');
-      } else if (deleteIndex === historyData.length) {
-        localStorage.setItem('latestCalculation', JSON.stringify(historyData[historyData.length - 1]));
+      if (saveCalculationHistory(historyData)) {
+        showSuccessMessage('ลบรายการสำเร็จ!');
+        
+        if (historyData.length === 0) {
+          localStorage.removeItem('latestCalculation');
+        } else if (deleteIndex === historyData.length) {
+          localStorage.setItem('latestCalculation', JSON.stringify(historyData[historyData.length - 1]));
+        }
+        
+        handleSearch();
+        updateStats();
+      } else {
+        alert('เกิดข้อผิดพลาดในการลบข้อมูล');
       }
     }
   } else if (deleteType === 'all') {
     localStorage.removeItem('calculationHistory');
     localStorage.removeItem('latestCalculation');
+    
+    showSuccessMessage('ลบข้อมูลทั้งหมดสำเร็จ!');
+    
+    resetSearch();
+    updateStats();
   }
   
   closeDeleteModal();
-  resetSearch();
-  updateStats();
 }
 
 function deleteAllHistory() {
+  const historyData = getCalculationHistory();
+  if (historyData.length === 0) {
+    alert('ไม่มีข้อมูลให้ลบ');
+    return;
+  }
+  
   showDeleteModal(null, 'all');
+}
+
+function showSuccessMessage(message) {
+  const successDiv = document.getElementById('successMessage');
+  const successText = document.getElementById('successText');
+  
+  successText.textContent = message;
+  successDiv.style.display = 'block';
+  
+  setTimeout(() => {
+    successDiv.style.display = 'none';
+  }, 3000);
 }
 
 window.onclick = function(event) {
@@ -713,6 +804,12 @@ window.onclick = function(event) {
     closeDeleteModal();
   }
 }
+
+document.addEventListener('keydown', function(event) {
+  if (event.key === 'Escape') {
+    closeDeleteModal();
+  }
+});
 </script>
 </body>
 </html>
