@@ -136,7 +136,6 @@
     .dosage-calculation {
       text-align: center;
       margin: 45px 0
-
     }
 
     .calculation-title {
@@ -319,15 +318,15 @@
       <div class="dosage-boxes">
         <div class="dosage-box">
           <div class="dosage-value" id="dosePerTime">XX.XX</div>
-          <div class="dosage-label">มก.ต่อครั้ง/วัน</div>
+          <div class="dosage-label">มก.ต่อครั้ง</div>
         </div>
         <div class="dosage-box">
           <div class="dosage-value" id="dailyDoses">XX.XX</div>
           <div class="dosage-label">มก./วัน</div>
         </div>
         <div class="dosage-box">
-          <div class="dosage-value" id="totalDailyDose">XX.XX</div>
-          <div class="dosage-label">มก.ต่อเดือน</div>
+          <div class="dosage-value" id="totalMonthlyDose">XX.XX</div>
+          <div class="dosage-label">มก./เดือน</div>
         </div>
       </div>
     </div>
@@ -360,6 +359,7 @@ function loadCalculationResult() {
   if (latestCalculation) {
     try {
       data = JSON.parse(latestCalculation);
+      console.log('ข้อมูลที่ได้รับ:', data);
 
       if (!data.timestamp || isNaN(Date.parse(data.timestamp))) {
         console.warn('Invalid timestamp detected, resetting to current time');
@@ -376,19 +376,21 @@ function loadCalculationResult() {
     data = {
       patient: { name: 'ไม่มีข้อมูลผู้ป่วย', age: '-', weight: '-' },
       medicine: { name: 'ไม่มีข้อมูลยา', type: '-', frequency: '-' },
-      dosageResult: { dosePerTime: 'XX.XX', dailyDoses: 'XX.XX', totalDailyDose: 'XX.XX' },
+      dosageResult: { dosePerTime: 'XX.XX', totalDailyDose: 'XX.XX', dailyDoses: 'XX.XX' },
       timestamp: new Date().toISOString()
     };
   }
   
   displayCalculationResult(data);
   
-  if (data.patient.name !== 'ไม่มีข้อมูลผู้ป่วย') {
+  if (data.patient && data.patient.name !== 'ไม่มีข้อมูลผู้ป่วย') {
     saveToHistory(data);
   }
 }
 
 function displayCalculationResult(data) {
+  console.log('แสดงข้อมูล:', data);
+
   if (data.patient) {
     document.getElementById('patientDisplayName').textContent = data.patient.name || '-';
     document.getElementById('patientAge').textContent = data.patient.age ? `${data.patient.age} ปี` : '-';
@@ -409,14 +411,19 @@ function displayCalculationResult(data) {
     document.getElementById('medicineFreq').textContent = '-';
   }
 
+  // แสดงผลการคำนวณ
   if (data.dosageResult) {
     document.getElementById('dosePerTime').textContent = data.dosageResult.dosePerTime || 'XX.XX';
-    document.getElementById('dailyDoses').textContent = data.dosageResult.dailyDoses || 'XX.XX';
-    document.getElementById('totalDailyDose').textContent = data.dosageResult.totalDailyDose || 'XX.XX';
+    document.getElementById('dailyDoses').textContent = data.dosageResult.totalDailyDose || 'XX.XX';
+    
+    // คำนวณปริมาณต่อเดือน (30 วัน)
+    const dailyDose = parseFloat(data.dosageResult.totalDailyDose) || 0;
+    const monthlyDose = (dailyDose * 30).toFixed(2);
+    document.getElementById('totalMonthlyDose').textContent = monthlyDose;
   } else {
     document.getElementById('dosePerTime').textContent = 'XX.XX';
     document.getElementById('dailyDoses').textContent = 'XX.XX';
-    document.getElementById('totalDailyDose').textContent = 'XX.XX';
+    document.getElementById('totalMonthlyDose').textContent = 'XX.XX';
   }
 }
 
@@ -439,8 +446,8 @@ function saveToHistory(data) {
     },
     dosageResult: {
       dosePerTime: data.dosageResult?.dosePerTime || '',
-      dailyDoses: data.dosageResult?.dailyDoses || '',
-      totalDailyDose: data.dosageResult?.totalDailyDose || ''
+      totalDailyDose: data.dosageResult?.totalDailyDose || '',
+      dailyDoses: data.dosageResult?.dailyDoses || ''
     },
     timestamp: data.timestamp || new Date().toISOString()
   };
@@ -467,7 +474,6 @@ function saveToHistory(data) {
     
     try {
       localStorage.setItem("calculationHistory", JSON.stringify(history));
-      localStorage.setItem("latestCalculation", JSON.stringify(record));
       console.log('Successfully saved to history:', record);
     } catch (error) {
       console.error('Error saving to history:', error);

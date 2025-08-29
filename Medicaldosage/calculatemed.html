@@ -516,7 +516,6 @@ const availableMedicines = [
 
 document.addEventListener('DOMContentLoaded', function() {
   loadMedicinesFromStorage();
-  
   console.log('หน้าคำนวณปริมาณยาโหลดเสร็จแล้ว');
 });
 
@@ -527,6 +526,7 @@ function loadMedicinesFromStorage() {
       !availableMedicines.some(default_med => default_med.name === stored.name)
     ));
   }
+  console.log('ยาทั้งหมด:', availableMedicines);
 }
 
 function openPatientModal() {
@@ -568,6 +568,7 @@ function closePatientModal() {
 
 function selectPatient(patient, index) {
   selectedPatient = patient;
+  console.log('เลือกผู้ป่วย:', patient);
   
   document.getElementById("patientName").value = patient.name;
   
@@ -579,8 +580,6 @@ function selectPatient(patient, index) {
   
   closePatientModal();
   updateCalculateButton();
-  
-  console.log('เลือกผู้ป่วย:', patient.name);
 }
 
 function selectMedicine(cardNum) {
@@ -630,6 +629,7 @@ function closeMedicineModal() {
 
 function selectMedicineFromModal(medicine) {
   selectedMedicine = medicine;
+  console.log('เลือกยา:', medicine);
   
   document.getElementById('medicineInput').value = medicine.name;
   
@@ -641,8 +641,6 @@ function selectMedicineFromModal(medicine) {
   
   closeMedicineModal();
   updateCalculateButton();
-  
-  console.log('เลือกยา:', medicine.name);
 }
 
 function updateCalculateButton() {
@@ -656,19 +654,21 @@ function updateCalculateButton() {
   }
 }
 
-
 function calculateDosage() {
   if (!selectedPatient || !selectedMedicine) {
     alert("กรุณาเลือกผู้ป่วยและยาก่อน");
     return;
   }
 
+  console.log('เริ่มคำนวณ:');
+  console.log('ผู้ป่วย:', selectedPatient);
+  console.log('ยา:', selectedMedicine);
+
   const weight = parseFloat(selectedPatient.weight);
   const age = parseInt(selectedPatient.age);
   
   let dosagePerKg = 10;
   let dailyDoses = 3;
-
   if (selectedMedicine.name.includes("พาราเซตามอล")) {
     dosagePerKg = 15;
     dailyDoses = 4;
@@ -678,6 +678,12 @@ function calculateDosage() {
   } else if (selectedMedicine.name.includes("อะม็อกซิซิลลิน")) {
     dosagePerKg = 25;
     dailyDoses = 3;
+  } else if (selectedMedicine.name.includes("เซฟาเล็กซิน")) {
+    dosagePerKg = 20;
+    dailyDoses = 4;
+  } else if (selectedMedicine.name.includes("โอเมพราโซล")) {
+    dosagePerKg = 1;
+    dailyDoses = 1;
   }
 
   if (age < 2) dosagePerKg *= 0.8;
@@ -689,28 +695,31 @@ function calculateDosage() {
   const dosageResult = {
     totalDailyDose: totalDailyDose.toFixed(2),
     dosePerTime: dosePerTime.toFixed(2),
-    dailyDoses: dailyDoses,
+    dailyDoses: dailyDoses.toString(),
     dosagePerKg: dosagePerKg.toFixed(1)
   };
   
-  saveCalculation(selectedPatient, selectedMedicine, dosageResult);
+  console.log('ผลการคำนวณ:', dosageResult);
+  
+  const fullCalculationData = {
+    patient: {
+      name: selectedPatient.name,
+      age: selectedPatient.age,
+      weight: selectedPatient.weight
+    },
+    medicine: {
+      name: selectedMedicine.name,
+      type: selectedMedicine.type,
+      frequency: selectedMedicine.frequency
+    },
+    dosageResult: dosageResult,
+    timestamp: new Date().toISOString()
+  };
+  
+  localStorage.setItem('latestCalculation', JSON.stringify(fullCalculationData));
+  console.log('บันทึกข้อมูลเรียบร้อย:', fullCalculationData);
 
   window.location.href = 'resultmed.html';
-}
-
-function saveCalculation(patient, medicine, dosageResult) {
-  const history = JSON.parse(localStorage.getItem('calculationHistory')) || [];
-  
-  const record = {
-    timestamp: new Date().toISOString(),
-    patient: { name: patient.name || 'ไม่ระบุ', id: patient.id || '' },
-    medicine: { name: medicine.name || 'ไม่ระบุ', frequency: medicine.frequency || '' },
-    dosageResult: { dosePerTime: dosageResult.dosePerTime, totalDose: dosageResult.totalDailyDose }
-  };
-
-  history.push(record);
-  localStorage.setItem('calculationHistory', JSON.stringify(history));
-  localStorage.setItem('latestCalculation', JSON.stringify(history[history.length - 1]));
 }
 </script>
 </body>
