@@ -342,7 +342,7 @@
     </div>
 
     <div class="action-buttons">
-      <a href="calculatemed.html" class="btn btn-dark">คำนวณใหม่</a>
+      <a href="calculatemed.html" class="btn btn-dark">คำนวณอีกครั้ง</a>
       <a href="history.html" class="btn btn-secondary">ดูประวัติการคำนวณ</a>
     </div>
 </div>
@@ -413,17 +413,16 @@ function displayCalculationResult(data) {
 
   // แสดงผลการคำนวณ
   if (data.dosageResult) {
-    document.getElementById('dosePerTime').textContent = data.dosageResult.dosePerTime || 'XX.XX';
-    document.getElementById('dailyDoses').textContent = data.dosageResult.totalDailyDose || 'XX.XX';
+    document.getElementById('dosePerTime').textContent = data.dosageResult.dosePerTime || '0.0';
+    document.getElementById('dailyDoses').textContent = data.dosageResult.totalDailyDose || '0.0';
     
-    // คำนวณปริมาณต่อเดือน (30 วัน)
     const dailyDose = parseFloat(data.dosageResult.totalDailyDose) || 0;
     const monthlyDose = (dailyDose * 30).toFixed(2);
     document.getElementById('totalMonthlyDose').textContent = monthlyDose;
   } else {
-    document.getElementById('dosePerTime').textContent = 'XX.XX';
-    document.getElementById('dailyDoses').textContent = 'XX.XX';
-    document.getElementById('totalMonthlyDose').textContent = 'XX.XX';
+    document.getElementById('dosePerTime').textContent = '0.0';
+    document.getElementById('dailyDoses').textContent = '0.0';
+    document.getElementById('totalMonthlyDose').textContent = '0.0';
   }
 }
 

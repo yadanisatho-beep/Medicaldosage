@@ -224,8 +224,6 @@
       box-shadow: 0 8px 30px rgba(57, 172, 149, 0.6);
     }
 
-
-
     .dosage-info {
       background: #e8f5e8;
       padding: 10px;
@@ -238,6 +236,27 @@
     .dosage-label {
       font-weight: 600;
       color: #27ae60;
+    }
+
+    .contraindication-info {
+      background: #ffe8e8;
+      padding: 10px;
+      border-radius: 6px;
+      margin-top: 8px;
+      font-size: 14px;
+      color: #2c3e50;
+    }
+
+    .contraindication-label {
+      font-weight: 600;
+      color: #e74c3c;
+    }
+
+    .search-highlight {
+      background-color: yellow;
+      padding: 2px 4px;
+      border-radius: 2px;
+      font-weight: 600;
     }
 
     @media (max-width: 768px) {
@@ -291,7 +310,7 @@
     </div>
     <div class="search-container">
       <i class="fas fa-search search-icon"></i>
-      <input type="text" class="search-input" placeholder="กรอกชื่อยา" id="searchInput">
+      <input type="text" class="search-input" placeholder="กรอกชื่อยา...." id="searchInput">
     </div>
   </div>
 
@@ -301,6 +320,7 @@
   <div class="no-results" id="noResults" style="display: none;">
     <i class="fas fa-search" style="font-size: 48px; color: #e9ecef; margin-bottom: 15px;"></i>
     <div>ไม่พบข้อมูลยาที่ค้นหา</div>
+    <div style="font-size: 14px; margin-top: 10px; color: #8a8a8a;">ลองค้นหาด้วยชื่อยา ประเภทยา หรือสารสำคัญ</div>
   </div>
 </div>
 
@@ -402,7 +422,13 @@ window.getDrugsData = function() {
   return drugsData;
 };
 
-function displayDrugs(drugs) {
+function highlightSearchTerm(text, searchTerm) {
+  if (!searchTerm) return text;
+  const regex = new RegExp(`(${searchTerm})`, 'gi');
+  return text.replace(regex, '<span class="search-highlight">$1</span>');
+}
+
+function displayDrugs(drugs, searchTerm = '') {
   const drugsList = document.getElementById('drugsList');
   const noResults = document.getElementById('noResults');
   
@@ -419,40 +445,63 @@ function displayDrugs(drugs) {
     <div class="drug-card" onclick="selectDrug(${drug.id})">
       <div class="drug-header">
         <div>
-          <div class="drug-name">${drug.name}</div>
-          <div class="drug-details">สารสำคัญ: ${drug.activeIngredient}</div>
+          <div class="drug-name">${highlightSearchTerm(drug.name, searchTerm)}</div>
+          <div class="drug-details">สารสำคัญ: ${highlightSearchTerm(drug.activeIngredient, searchTerm)}</div>
         </div>
         <div class="time-badge">
           <i class="fas fa-clock"></i>
           ${drug.frequency}
         </div>
       </div>
-      <div class="drug-type">ประเภท: ${drug.type}</div>
+      <div class="drug-type">ประเภท: ${highlightSearchTerm(drug.type, searchTerm)}</div>
       <div class="dosage-info">
         <span class="dosage-label">ขนาดยา:</span> ${drug.dosage}
+      </div>
+      <div class="contraindication-info">
+        <span class="contraindication-label">ข้อควรระวัง:</span> ${drug.contraindication}
       </div>
     </div>
   `).join('');
 }
 
 function filterDrugs(searchTerm) {
-  const filteredDrugs = drugsData.filter(drug => 
-    drug.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    drug.type.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    drug.activeIngredient.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    drug.indication.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-  displayDrugs(filteredDrugs);
+  if (!searchTerm.trim()) {
+    displayDrugs(drugsData);
+    return;
+  }
+  
+  const filteredDrugs = drugsData.filter(drug => {
+    const searchLower = searchTerm.toLowerCase();
+    return drug.name.toLowerCase().includes(searchLower) ||
+           drug.genericName.toLowerCase().includes(searchLower) ||
+           drug.type.toLowerCase().includes(searchLower) ||
+           drug.activeIngredient.toLowerCase().includes(searchLower) ||
+           drug.contraindication.toLowerCase().includes(searchLower) ||
+           drug.dosage.toLowerCase().includes(searchLower);
+  });
+  
+  displayDrugs(filteredDrugs, searchTerm);
 }
 
 document.getElementById('searchInput').addEventListener('input', function(e) {
   filterDrugs(e.target.value);
 });
 
+document.getElementById('searchInput').addEventListener('keypress', function(e) {
+  if (e.key === 'Enter') {
+    filterDrugs(e.target.value);
+  }
+});
+
 displayDrugs(drugsData);
 
+//  backend 
 async function loadDrugsFromBackend() {
   try {
+    // const response = await fetch('/api/drugs');
+    // const drugs = await response.json();
+    // drugsData = drugs;
+    // displayDrugs(drugsData);
     console.log('พร้อมเชื่อมต่อกับ backend');
   } catch (error) {
     console.error('Error loading drugs:', error);
@@ -462,6 +511,17 @@ async function loadDrugsFromBackend() {
 window.addEventListener('DOMContentLoaded', function() {
   console.log('หน้าข้อมูลยาโหลดเรียบร้อย');
   console.log('ข้อมูลยาทั้งหมด:', drugsData.length, 'รายการ');
+  
+  const searchInput = document.getElementById('searchInput');
+  searchInput.addEventListener('focus', function() {
+    this.style.borderColor = '#39AC95';
+  });
+  
+  searchInput.addEventListener('blur', function() {
+    if (!this.value) {
+      this.style.borderColor = '#e0e6ed';
+    }
+  });
 });
 </script>
 
