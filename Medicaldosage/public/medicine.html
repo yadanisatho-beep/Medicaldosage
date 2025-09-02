@@ -498,10 +498,10 @@ displayDrugs(drugsData);
 //  backend 
 async function loadDrugsFromBackend() {
   try {
-    // const response = await fetch('/api/drugs');
-    // const drugs = await response.json();
-    // drugsData = drugs;
-    // displayDrugs(drugsData);
+    const response = await fetch('/api/drugs');
+    const drugs = await response.json();
+    drugsData = drugs;
+    displayDrugs(drugsData);
     console.log('พร้อมเชื่อมต่อกับ backend');
   } catch (error) {
     console.error('Error loading drugs:', error);
