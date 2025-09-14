@@ -2,10 +2,11 @@
 <html lang="th">
 <head>
   <meta charset="UTF-8" />
-  <title>Medical Dosage System</title>
+  <title>หน้าหลัก - Dosage System</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=K2D:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
   <style>
     body {
       margin: 0;
@@ -28,69 +29,34 @@
       width: fit-content;
       margin: 50px 0 0 20px;;
       text-align: start;
-  }
+    }
 
-  .pills-background {
-    width: 210px;
-    opacity: 0.9;
-    margin-top: -60px;
-    transform: translateX(-25px);
-  }
+    .pills-background {
+      width: 210px;
+      opacity: 0.9;
+      margin-top: -60px;
+      transform: translateX(-25px);
+    }
 
-  .container {
+    .container {
       display: flex;
       align-items: center;
       gap: 15px;
     }
     
-    .css-logo {
-      width: 60px;
-      height: 60px;
-      background: linear-gradient(135deg, #fff 0%, #f0f9ff 100%);
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-      transition: transform 0.3s ease;
-    }
-    
-    .css-logo:hover {
-      transform: scale(1.05) rotate(5deg);
-    }
-    
-    .css-logo::before {
-      content: '';
-      position: absolute;
-      width: 20px;
-      height: 6px;
-      background: #39AC95;
-      border-radius: 3px;
-    }
-    
-    .css-logo::after {
-      content: '';
-      position: absolute;
-      width: 6px;
-      height: 20px;
-      background: #39AC95;
-      border-radius: 3px;
-    }
-    
     nav {
       margin-left: auto;
       display: flex;
-      gap: 30px;
+      gap: 20px;
     }
     
     nav a {
       color: white;
       text-decoration: none;
       font-weight: 600;
-      font-size: 20px;
+      font-size: 17.5px;
       transition: all 0.3s;
-      padding: 8px 16px;
+      padding: 8px 15px;
       border-radius: 8px;
       position: relative;
     }
@@ -98,6 +64,96 @@
     nav a:hover {
       background: rgba(255, 255, 255, 0.2);
       transform: translateY(-2px);
+    }
+    
+    .login-btn {
+      background: rgba(255, 255, 255, 0.2);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      color: white;
+      padding: 8px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 16px;
+      transition: all 0.3s;
+      margin-left: 20px;
+      text-decoration: none;
+      display: inline-block;
+    }
+    
+    .login-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateY(-2px);
+    }
+    
+    .user-menu {
+      position: relative;
+      display: inline-block;
+      margin-left: 20px;
+    }
+
+    .user-btn {
+      background: rgba(255, 255, 255, 0.2);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      color: white;
+      padding: 8px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 12px;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border: none;
+      outline: none;
+    }
+
+    .user-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateY(-2px);
+    }
+
+    .user-dropdown {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+      min-width: 200px;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-10px);
+      transition: all 0.3s ease;
+      margin-top: 5px;
+    }
+
+    .user-dropdown.show {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .user-dropdown a {
+      display: block;
+      padding: 12px 20px;
+      color: #2c3e50 !important;
+      text-decoration: none;
+      font-size: 14px;
+      transition: all 0.3s;
+    }
+
+    .user-dropdown a:hover {
+      background: #f8f9fa;
+      color: #39AC95 !important;
+    }
+
+    .user-dropdown .divider {
+      height: 1px;
+      background: #e9ecef;
+      margin: 8px 0;
     }
     
     .main-title {
@@ -134,7 +190,7 @@
       box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
     }
 
-    .container {
+    .main-container {
       display: grid;
       grid-template-columns: 1fr 1.7fr;
       gap: 30px;
@@ -487,13 +543,9 @@
     }
 
     @media (max-width: 768px) {
-      .container {
+      .main-container {
         grid-template-columns: 1fr;
         padding: 20px;
-      }
-      
-      .stats-container {
-        padding: 0 20px;
       }
       
       .grid-box {
@@ -513,10 +565,127 @@
       
       .main-title {
         flex-direction: column;
-        font-size: 38px;
+        font-size: 28px;
       }
     }
-  </style>
+   .popup-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .popup-overlay.show {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .popup-container {
+      background: white;
+      border-radius: 15px;
+      padding: 30px;
+      max-width: 450px;
+      width: 90%;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+      transform: scale(0.8);
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .popup-overlay.show .popup-container {
+      transform: scale(1);
+    }
+
+    .popup-header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+      gap: 12px;
+    }
+
+    .popup-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      color: white;
+    }
+
+    .popup-icon.success {
+      background: linear-gradient(135deg, #27ae60, #2ecc71);
+    }
+
+    .popup-icon.warning {
+      background: linear-gradient(135deg, #f39c12, #e67e22);
+    }
+
+    .popup-icon.info {
+      background: linear-gradient(135deg, #3498db, #2980b9);
+    }
+
+    .popup-title {
+      font-size: 20px;
+      font-weight: bold;
+      color: #2c3e50;
+      margin: 0;
+    }
+
+    .popup-message {
+      text-align: center;
+      color: #7f8c8d;
+      font-size: 16px;
+      line-height: 1.5;
+      margin-bottom: 25px;
+      white-space: pre-line;
+    }
+
+    .popup-buttons {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    .popup-btn {
+      padding: 10px 25px;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-size: 14px;
+    }
+
+    .popup-btn.primary {
+      background: linear-gradient(135deg, #39AC95, #2E8B7A);
+      color: white;
+    }
+
+    .popup-btn.primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(57, 172, 149, 0.3);
+    }
+
+    .popup-close {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: none;
+      border: none
+    }
+</style>
 </head>
 <body>
 <header>
@@ -529,6 +698,9 @@
     <a href="medicine.html">ข้อมูลยา</a>
     <a href="calculatemed.html">คำนวณปริมาณยา</a>
     <a href="history.html">ประวัติการคำนวณยา</a>
+    <div id="authSection">
+      <a href="login.html" class="login-btn">เข้าสู่ระบบ</a>
+    </div>
   </nav>
 </header>
 
@@ -538,7 +710,7 @@
 </div>
 <div style="text-align:center; font-size: 19px; margin-top:5px; font-weight:600; color: #7f8c8d;">Medical Dosage System</div>
 
-<div class="container">
+<div class="main-container">
   <div class="steps-container">
     <div class="header">
       <div class="location-icon"></div>
@@ -596,7 +768,7 @@
         <div class="icon">
           <div class="calculator-icon"></div>
         </div>
-        <span>คำนวณปริมาณยา</span>
+        <span>คำนวดปริมาณยา</span>
         <div class="action-desc">คำนวณปริมาณยาสำหรับผู้ป่วย</div>
       </a>
       <a href="history.html" class="action-box">
@@ -607,9 +779,132 @@
         <div class="action-desc">ตรวจประวัติการคำนวณ</div>
       </a>
     </div>
+<div class="popup-overlay" id="logoutPopup">
+  <div class="popup-container">
+    <button class="popup-close" onclick="closeLogoutPopup()"><i class="fas fa-times"></i></button>
+    <div class="popup-header">
+      <div class="popup-icon warning"><i class="fas fa-sign-out-alt"></i></div>
+      <div class="popup-title">ออกจากระบบ</div>
+    </div>
+    <div class="popup-message">คุณต้องการออกจากระบบหรือไม่?</div>
+    <div class="popup-buttons">
+      <button class="popup-btn primary" onclick="confirmLogout()">ตกลง</button>
+      <button class="popup-btn primary" onclick="closeLogoutPopup()">ยกเลิก</button>
+    </div>
   </div>
 </div>
+<div class="popup-overlay" id="resultPopup">
+  <div class="popup-container">
+    <button class="popup-close" onclick="closeResultPopup()"><i class="fas fa-times"></i></button>
+    <div class="popup-header">
+      <div class="popup-icon success"><i class="fas fa-check"></i></div>
+      <div class="popup-title" id="resultTitle"></div>
+    </div>
+    <div class="popup-message" id="resultMsg"></div>
+    <div class="popup-buttons">
+      <button class="popup-btn primary" onclick="closeResultPopup()">ปิด</button>
+    </div>
   </div>
 </div>
+<script>
+function getCurrentUser() {
+  let user =
+    JSON.parse(localStorage.getItem('currentMedicalUser') || 'null') ||
+    JSON.parse(sessionStorage.getItem('currentMedicalUser') || 'null') ||
+    null;
+  return user;
+}
+
+function updateUIForLoggedInUser() {
+  const authSection = document.getElementById('authSection');
+  const currentUser = getCurrentUser();
+  if (authSection) {
+    if (currentUser) {
+      authSection.innerHTML = `
+        <div class="user-menu">
+          <button class="user-btn" onclick="toggleUserDropdown()">
+            <i class="fas fa-user-doctor"></i>
+            ${currentUser.firstName}
+            <i class="fas fa-chevron-down"></i>
+          </button>
+          <div class="user-dropdown" id="userDropdown">
+            <a href="#" onclick="showProfile();return false;">
+              <i class="fas fa-user"></i> ข้อมูลส่วนตัว
+            </a>
+            <div class="divider"></div>
+            <a href="#" onclick="showLogoutPopup();return false;">
+              <i class="fas fa-sign-out-alt"></i> ออกจากระบบ
+            </a>
+          </div>
+        </div>
+      `;
+    } else {
+      authSection.innerHTML = '<a href="login.html" class="login-btn">เข้าสู่ระบบ</a>';
+    }
+  }
+}
+
+function toggleUserDropdown() {
+  const dropdown = document.getElementById('userDropdown');
+  if (dropdown) {
+    dropdown.classList.toggle('show');
+    document.addEventListener('click', function closeDropdown(e) {
+      if (!e.target.closest('.user-menu')) {
+        dropdown.classList.remove('show');
+        document.removeEventListener('click', closeDropdown);
+      }
+    });
+  }
+}
+
+function showLogoutPopup() {
+  document.getElementById('logoutPopup').classList.add('show');
+}
+function closeLogoutPopup() {
+  document.getElementById('logoutPopup').classList.remove('show');
+}
+function confirmLogout() {
+  localStorage.removeItem('currentMedicalUser');
+  localStorage.removeItem('rememberMedicalUser');
+  sessionStorage.removeItem('currentMedicalUser');
+  updateUIForLoggedInUser();
+  closeLogoutPopup();
+  showResultPopup('ออกจากระบบ', 'ออกจากระบบเรียบร้อยแล้ว');
+}
+
+function showResultPopup(title, msg) {
+  document.getElementById('resultTitle').innerText = title;
+  document.getElementById('resultMsg').innerText = msg;
+  document.getElementById('resultPopup').classList.add('show');
+}
+function closeResultPopup() {
+  document.getElementById('resultPopup').classList.remove('show');
+}
+
+function showProfile() {
+  const user = getCurrentUser();
+  if (!user) {
+    showResultPopup('เข้าสู่ระบบ', 'กรุณาเข้าสู่ระบบก่อน');
+    return;
+  }
+  window.location.href = 'personalinfo.html';
+}
+document.addEventListener('DOMContentLoaded', function() {
+  updateUIForLoggedInUser();
+
+  // sync remembered user
+  const rememberedUser = localStorage.getItem('rememberMedicalUser');
+  if (rememberedUser && !getCurrentUser()) {
+    localStorage.setItem('currentMedicalUser', rememberedUser);
+    updateUIForLoggedInUser();
+  }
+});
+
+window.addEventListener('storage', function(e) {
+  if (e.key === 'currentMedicalUser' || e.key === 'rememberMedicalUser') {
+    updateUIForLoggedInUser();
+  }
+});
+</script>
 </body>
 </html>

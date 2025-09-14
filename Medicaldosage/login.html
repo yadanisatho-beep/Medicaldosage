@@ -1,0 +1,1242 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1"> 
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/5/w3.css"> 
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"> 
+  <meta charset="UTF-8" /> 
+  <title>Login - Medical System</title> 
+  <link rel="preconnect" href="https://fonts.googleapis.com" /> 
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin /> 
+  <link href="https://fonts.googleapis.com/css2?family=K2D:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" /> 
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: "K2D", sans-serif;
+      background-color: #CBEAEB; 
+    }
+    
+    header {
+      background: linear-gradient(135deg, #39AC95 100%, #2E8B7A 0%);
+      display: flex;
+      align-items: center;
+      padding: 15px 30px;
+      position: relative;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+    
+    .logo-container {
+      position: relative;
+      width: fit-content;
+      margin: 50px 0 0 20px;;
+      text-align: start;
+    }
+
+    .pills-background {
+      width: 210px;
+      opacity: 0.9;
+      margin-top: -60px;
+      transform: translateX(-25px);
+    }
+
+    .container {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    
+    nav {
+      margin-left: auto;
+      display: flex;
+      gap: 20px;
+    }
+    
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 18px;
+      transition: all 0.3s;
+      padding: 8px 15px;
+      border-radius: 8px;
+      position: relative;
+    }
+    
+    nav a:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: translateY(-2px);
+    }
+    
+    .login-btn {
+      background: rgba(255, 255, 255, 0.2);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      color: white;
+      padding: 8px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 16px;
+      transition: all 0.3s;
+      margin-left: 20px;
+      text-decoration: none;
+      display: inline-block;
+    }
+    
+    .login-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateY(-2px);
+    }
+
+    .user-menu {
+      position: relative;
+      display: inline-block;
+    }
+
+    .user-btn {
+      background: rgba(255, 255, 255, 0.2);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      color: white;
+      padding: 8px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 12px;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border: none;
+      outline: none;
+    }
+
+    .user-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateY(-2px);
+    }
+
+    .user-dropdown {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+      min-width: 200px;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-10px);
+      transition: all 0.3s ease;
+      margin-top: 5px;
+    }
+
+    .user-dropdown.show {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .user-dropdown a {
+      display: block;
+      padding: 12px 20px;
+      color: #2c3e50;
+      text-decoration: none;
+      font-size: 14px;
+      transition: all 0.3s;
+    }
+
+    .user-dropdown a:hover {
+      background: #f8f9fa;
+      color: #39AC95;
+    }
+
+    .user-dropdown .divider {
+      height: 1px;
+      background: #e9ecef;
+      margin: 8px 0;
+    }
+    
+    .auth-form {
+      max-width: 610px;
+      margin: 50px auto;
+      background: #f8efef;
+      padding: 40px;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      position: relative;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #2c3e50;
+    }
+
+    .form-group input, .form-group select {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 16px;
+      transition: all 0.3s;
+      box-sizing: border-box;
+    }
+
+    .form-group input:focus, .form-group select:focus {
+      outline: none;
+      border-color: #39AC95;
+    }
+
+    .form-group select {
+      cursor: pointer;
+    }
+
+    .license-verification {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .verification-status {
+      font-size: 14px;
+      font-weight: 600;
+      padding: 4px 8px;
+      border-radius: 4px;
+      display: none;
+    }
+
+    .verification-status.valid {
+      color: #27ae60;
+      background: #d5f4e6;
+      display: block;
+    }
+
+    .verification-status.invalid {
+      color: #e74c3c;
+      background: #ffeaea;
+      display: block;
+    }
+
+    .verification-status.checking {
+      color: #f39c12;
+      background: #fff3cd;
+      display: block;
+    }
+
+    .submit-btn {
+      width: 100%;
+      background: linear-gradient(135deg, #39AC95 0%, #2E8B7A 100%);
+      color: white;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-size: 18px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .submit-btn:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(57, 172, 149, 0.3);
+    }
+
+    .submit-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .medical-icon {
+      display: flex;             
+      align-items: center;        
+      justify-content: center;   
+      gap: 7px;                  
+      font-size: 22px;
+      margin-bottom: 14px;
+      font-weight: bolder;
+      color: #2c3e50;
+    }
+
+    .form-switch {
+      text-align: center;
+      margin-top: 25px;
+      padding-top: 20px;
+      border-top: 1px solid #e0e0e0;
+    }
+
+    .switch-text {
+      color: #7f8c8d;
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+
+    .switch-btn {
+      background: none;
+      border: none;
+      color: #39AC95;
+      font-weight: 600;
+      font-size: 16px;
+      cursor: pointer;
+      text-decoration: underline;
+      transition: all 0.3s;
+    }
+
+    .switch-btn:hover {
+      color: #2E8B7A;
+      transform: scale(1.05);
+    }
+
+    .login-form, .register-form {
+      display: none;
+    }
+
+    .login-form.active, .register-form.active {
+      display: block;
+    }
+
+    .register-btn {
+      width: 100%;
+      background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+      color: white;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-size: 18px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .register-btn:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(231, 76, 60, 0.3);
+    }
+
+    .register-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .form-row {
+      display: flex;
+      gap: 15px;
+    }
+
+    .form-row .form-group {
+      flex: 1;
+    }
+
+    /* Custom Popup Styles */
+    .popup-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .popup-overlay.show {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .popup-container {
+      background: white;
+      border-radius: 15px;
+      padding: 30px;
+      max-width: 450px;
+      width: 90%;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+      transform: scale(0.8);
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .popup-overlay.show .popup-container {
+      transform: scale(1);
+    }
+
+    .popup-header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+      gap: 12px;
+    }
+
+    .popup-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      color: white;
+    }
+
+    .popup-icon.success {
+      background: linear-gradient(135deg, #27ae60, #2ecc71);
+    }
+
+    .popup-icon.error {
+      background: linear-gradient(135deg, #e74c3c, #c0392b);
+    }
+
+    .popup-icon.warning {
+      background: linear-gradient(135deg, #f39c12, #e67e22);
+    }
+
+    .popup-title {
+      font-size: 20px;
+      font-weight: bold;
+      color: #2c3e50;
+      margin: 0;
+    }
+
+    .popup-message {
+      text-align: center;
+      color: #7f8c8d;
+      font-size: 16px;
+      line-height: 1.5;
+      margin-bottom: 25px;
+    }
+
+    .popup-buttons {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    .popup-btn {
+      padding: 10px 25px;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-size: 14px;
+    }
+
+    .popup-btn.primary {
+      background: linear-gradient(135deg, #39AC95, #2E8B7A);
+      color: white;
+    }
+
+    .popup-btn.primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(57, 172, 149, 0.3);
+    }
+
+    .popup-btn.secondary {
+      background: #ecf0f1;
+      color: #7f8c8d;
+    }
+
+    .popup-btn.secondary:hover {
+      background: #d5dbdb;
+    }
+
+    .popup-close {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: none;
+      border: none;
+      font-size: 20px;
+      color: #bdc3c7;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .popup-close:hover {
+      color: #7f8c8d;
+      transform: rotate(90deg);
+    }
+
+    .remember-me {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .remember-me input[type="checkbox"] {
+      width: auto;
+      margin: 0;
+    }
+
+    .debug-panel {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: rgba(0, 0, 0, 0.8);
+      color: white;
+      padding: 15px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-family: monospace;
+      max-width: 300px;
+      z-index: 999;
+    }
+
+    .debug-title {
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: #39AC95;
+    }
+
+    .debug-item {
+      margin-bottom: 5px;
+    }
+
+    .debug-btn {
+      background: #39AC95;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 11px;
+      margin: 2px;
+    }
+
+    .debug-btn:hover {
+      background: #2E8B7A;
+    }
+
+    .loading-indicator {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid #f3f3f3;
+      border-top: 2px solid #39AC95;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-left: 8px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .success-message {
+      color: #27ae60;
+      background: #d5f4e6;
+      padding: 10px;
+      border-radius: 8px;
+      margin-top: 10px;
+      display: none;
+    }
+
+    @media (max-width: 768px) {
+      .debug-panel {
+        display: none;
+      }
+
+      .auth-form {
+        margin: 20px;
+        padding: 30px 20px;
+      }
+
+      .form-row {
+        flex-direction: column;
+        gap: 0;
+      }
+
+      header {
+        flex-direction: column;
+        text-align: center;
+        padding: 15px;
+      }
+
+      nav {
+        margin-left: 0;
+        margin-top: 15px;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+      }
+
+      nav a {
+        font-size: 14px;
+        padding: 6px 12px;
+      }
+
+      .logo-container {
+        margin: 0;
+      }
+
+      .pills-background {
+        width: 180px;
+        height: 50px;
+        font-size: 14px;
+        margin-top: 0;
+        transform: none;
+      }
+    }
+  </style>
+</head>
+<body>
+<body>
+<header>
+  <div class="logo-container">
+    <img src="logopj.png" alt="Pills" class="pills-background">
+  </div>
+  <nav>
+    <a href="homepage.html">หน้าหลัก</a>
+    <a href="managepatientdata.html">จัดการข้อมูลผู้ป่วย</a>
+    <a href="medicine.html">ข้อมูลยา</a>
+    <a href="calculatemed.html">คำนวณปริมาณยา</a>
+    <a href="history.html">ประวัติการคำนวณยา</a>
+    <div id="authSection">
+      <a href="login.html" class="login-btn">เข้าสู่ระบบ</a>
+    </div>
+</nav>
+  </nav>
+</header>
+  
+  <div class="auth-form" id="authForm">
+    <!-- Login Form -->
+    <div class="login-form active" id="loginForm">
+      <div class="medical-icon">
+        <i class="fa-solid fa-user-doctor"></i>
+        <span>เข้าสู่ระบบ</span>
+      </div>
+      <div style="text-align:center; font-size: 15px; margin-bottom:35px; font-weight:bolder; color: #7f8c8d;">ระบบคำนวณปริมาณยาสำหรับแพทย์</div>
+      <form id="loginFormElement">
+        <div class="form-group">
+          <label for="loginUsername">ชื่อผู้ใช้:</label>
+          <input type="text" id="loginUsername" name="username" required placeholder="กรุณากรอกชื่อผู้ใช้">
+        </div>
+
+        <div class="form-group">
+          <label for="loginPassword">รหัสผ่าน:</label>
+          <input type="password" id="loginPassword" name="password" required placeholder="กรุณากรอกรหัสผ่าน">
+        </div>
+
+        <div class="remember-me">
+          <input type="checkbox" id="rememberMe" name="rememberMe">
+          <label for="rememberMe">จดจำการเข้าสู่ระบบ</label>
+        </div>
+
+        <button type="submit" class="submit-btn" id="loginBtn">เข้าสู่ระบบ</button>
+      </form>
+      
+      <div class="form-switch">
+        <div class="switch-text">ยังไม่มีบัญชีผู้ใช้?</div>
+        <button class="switch-btn" onclick="showRegisterForm()">สมัครสมาชิก</button>
+      </div>
+    </div>
+
+    <!-- Register Form -->
+    <div class="register-form" id="registerForm">
+      <div class="medical-icon">
+        <i class="fa-solid fa-user-plus"></i>
+        <span>สมัครสมาชิก</span>
+      </div>
+      <div style="text-align:center; font-size: 15px; margin-bottom:35px; font-weight:bolder; color: #7f8c8d;">สร้างบัญชีใหม่สำหรับแพทย์</div>
+      <form id="registerFormElement">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="firstName">ชื่อ:</label>
+            <input type="text" id="firstName" name="firstName" required placeholder="กรุณากรอกชื่อ">
+          </div>
+          <div class="form-group">
+            <label for="lastName">นามสกุล:</label>
+            <input type="text" id="lastName" name="lastName" required placeholder="กรุณากรอกนามสกุล">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="email">อีเมล:</label>
+          <input type="email" id="email" name="email" required placeholder="example@hospital.th">
+        </div>
+
+        <div class="form-group">
+          <label for="licenseNumber">เลขใบประกอบวิชาชีพแพทย์:</label>
+          <input type="text" id="licenseNumber" name="licenseNumber" required placeholder="กรุณากรอกเลขใบประกอบวิชาชีพ 5 หลัก" maxlength="5">
+          <div class="license-verification">
+            <div class="verification-status" id="licenseStatus"></div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="hospital">โรงพยาบาล/คลินิก:</label>
+          <select id="hospital" name="hospital" required>
+            <option value="">เลือกโรงพยาบาล</option>
+            <option value="โรงพยาบาลจุฬาลงกรณ์">โรงพยาบาลจุฬาลงกรณ์ สภากาชาดไทย</option>
+            <option value="โรงพยาบาลศิริราช">โรงพยาบาลศิริราช</option>
+            <option value="โรงพยาบาลรามาธิบดี">โรงพยาบาลรามาธิบดี</option>
+            <option value="โรงพยาบาลเซนต์หลุยส์">โรงพยาบาลเซนต์หลุยส์</option>
+            <option value="โรงพยาบาลกรุงเทพ">โรงพยาบาลกรุงเทพ</option>
+            <option value="โรงพยาบาลบำรุงราษฎร์">โรงพยาบาลบำรุงราษฎร์</option>
+            <option value="โรงพยาบาลวิภาวดี">โรงพยาบาลวิภาวดี</option>
+            <option value="โรงพยาบาลยันฮี">โรงพยาบาลยันฮี</option>
+            <option value="โรงพยาบาลเชียงใหม่">โรงพยาบาลเชียงใหม่</option>
+            <option value="โรงพยาบาลนครพิงค์">โรงพยาบาลนครพิงค์</option>
+            <option value="โรงพยาบาลสงขลานครินทร์">โรงพยาบาลสงขลานครินทร์</option>
+            <option value="โรงพยาบาลขอนแก่น">โรงพยาบาลขอนแก่น</option>
+            <option value="โรงพยาบาลมหาราชนครราชสีมา">โรงพยาบาลมหาราชนครราชสีมา</option>
+            <option value="โรงพยาบาลอุดรธานี">โรงพยาบาลอุดรธานี</option>
+            <option value="โรงพยาบาลหาดใหญ่">โรงพยาบาลหาดใหญ่</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="registerUsername">ชื่อผู้ใช้:</label>
+          <input type="text" id="registerUsername" name="username" required placeholder="กรุณากรอกชื่อผู้ใช้">
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="registerPassword">รหัสผ่าน:</label>
+            <input type="password" id="registerPassword" name="password" required placeholder="ความยาวอย่างน้อย 6 ตัวอักษร">
+          </div>
+          <div class="form-group">
+            <label for="confirmPassword">ยืนยันรหัสผ่าน:</label>
+            <input type="password" id="confirmPassword" name="confirmPassword" required placeholder="กรอกรหัสผ่านอีกครั้ง">
+          </div>
+        </div>
+
+        <button type="submit" class="register-btn" id="registerBtn" disabled>สมัครสมาชิก</button>
+      </form>
+      
+      <div class="form-switch">
+        <div class="switch-text">มีบัญชีผู้ใช้แล้ว?</div>
+        <button class="switch-btn" onclick="showLoginForm()">เข้าสู่ระบบ</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Custom Popup -->
+  <div class="popup-overlay" id="customPopup">
+    <div class="popup-container">
+      <button class="popup-close" onclick="closePopup()">&times;</button>
+      <div class="popup-header">
+        <div class="popup-icon" id="popupIcon">
+          <i class="fas fa-check" id="popupIconSymbol"></i>
+        </div>
+        <h3 class="popup-title" id="popupTitle">แจ้งเตือน</h3>
+      </div>
+      <div class="popup-message" id="popupMessage">
+        ข้อความแจ้งเตือน
+      </div>
+      <div class="popup-buttons">
+        <button class="popup-btn primary" onclick="closePopup()">ตกลง</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Debug Panel -->
+  <div class="debug-panel" id="debugPanel">
+    <div class="debug-title">Debug Panel</div>
+    <div class="debug-item">Users in DB: <span id="userCount">0</span></div>
+    <div class="debug-item">Current User: <span id="currentUserStatus">None</span></div>
+    <div style="margin-top: 10px;">
+      <button class="debug-btn" onclick="addSampleUser()">Add Test User</button>
+      <button class="debug-btn" onclick="showDebugInfo()">Show DB</button>
+      <button class="debug-btn" onclick="clearDatabase()">Clear DB</button>
+    </div>
+    <div style="margin-top: 8px; font-size: 10px; color: #ccc;">
+      Test Login: doctor1 / 123456
+    </div>
+  </div>
+
+  <script>
+    // Mock Medical License Database
+    const mockMedicalLicenseDB = {
+      '12345': { valid: true, name: 'นพ.สมชาย ใจดี', hospital: 'โรงพยาบาลจุฬาลงกรณ์' },
+      '23456': { valid: true, name: 'นพ.สมศักดิ์ รักษาดี', hospital: 'โรงพยาบาลศิริราช' },
+      '34567': { valid: true, name: 'นพ.วิชาญ รักษาไข', hospital: 'โรงพยาบาลรามาธิบดี' },
+      '45678': { valid: true, name: 'นพ.สมหญิง ใสใจ', hospital: 'โรงพยาบาลเซนต์หลุยส์' },
+      '56789': { valid: true, name: 'นพ.จักรพงษ์ ชั้นดี', hospital: 'โรงพยาบาลกรุงเทพ' }
+    };
+
+    // Database simulation
+    let usersDatabase = JSON.parse(localStorage.getItem('medicalUsersDatabase')) || [];
+    let currentUser = JSON.parse(localStorage.getItem('currentMedicalUser')) || 
+                     JSON.parse(sessionStorage.getItem('currentMedicalUser')) || null;
+
+    // Initialize page
+    document.addEventListener('DOMContentLoaded', function() {
+      updateDebugPanel();
+      updateUIForLoggedInUser();
+      setupFormValidation();
+      setupLicenseVerification();
+      
+      // Check for remembered user
+      if (localStorage.getItem('rememberMedicalUser') && !currentUser) {
+        const rememberedUser = JSON.parse(localStorage.getItem('rememberMedicalUser'));
+        currentUser = rememberedUser;
+        updateUIForLoggedInUser();
+      }
+    });
+
+    // Save to database
+    function saveToDatabase() {
+      localStorage.setItem('medicalUsersDatabase', JSON.stringify(usersDatabase));
+    }
+
+    // Debug functions
+    function updateDebugPanel() {
+      document.getElementById('userCount').textContent = usersDatabase.length;
+      document.getElementById('currentUserStatus').textContent = 
+        currentUser ? `${currentUser.firstName} (${currentUser.username})` : 'None';
+    }
+
+    function addSampleUser() {
+      const sampleUser = {
+        id: Date.now(),
+        firstName: 'สมชาย',
+        lastName: 'ใจดี',
+        email: 'somchai@hospital.th',
+        licenseNumber: '12345',
+        hospital: 'โรงพยาบาลจุฬาลงกรณ์',
+        username: 'doctor1',
+        password: btoa('123456'),
+        registeredAt: new Date().toISOString(),
+        isActive: true
+      };
+      
+      if (!usersDatabase.find(u => u.username === sampleUser.username)) {
+        usersDatabase.push(sampleUser);
+        saveToDatabase();
+        showPopup('success', 'เพิ่มข้อมูลตัวอย่าง', 'เพิ่มผู้ใช้ทดสอบ: doctor1 / 123456');
+        updateDebugPanel();
+      } else {
+        showPopup('warning', 'มีข้อมูลแล้ว', 'ผู้ใช้ทดสอบมีอยู่ในระบบแล้ว');
+      }
+    }
+
+    function showDebugInfo() {
+      console.log('Users Database:', usersDatabase);
+      console.log('Current User:', currentUser);
+      console.log('LocalStorage:', localStorage.getItem('medicalUsersDatabase'));
+    }
+
+    function clearDatabase() {
+      if (confirm('ต้องการลบข้อมูลทั้งหมดใช่หรือไม่?')) {
+        usersDatabase = [];
+        currentUser = null;
+        localStorage.removeItem('medicalUsersDatabase');
+        localStorage.removeItem('currentMedicalUser');
+        localStorage.removeItem('rememberMedicalUser');
+        sessionStorage.removeItem('currentMedicalUser');
+        updateUIForLoggedInUser();
+        updateDebugPanel();
+        showPopup('success', 'ล้างข้อมูล', 'ลบข้อมูลทั้งหมดเรียบร้อยแล้ว');
+      }
+    }
+
+    // Custom Popup Functions
+    function showPopup(type, title, message, callback) {
+      const popup = document.getElementById('customPopup');
+      const icon = document.getElementById('popupIcon');
+      const iconSymbol = document.getElementById('popupIconSymbol');
+      const titleEl = document.getElementById('popupTitle');
+      const messageEl = document.getElementById('popupMessage');
+
+      // Set icon and style based on type
+      icon.className = `popup-icon ${type}`;
+      switch(type) {
+        case 'success':
+          iconSymbol.className = 'fas fa-check';
+          break;
+        case 'error':
+          iconSymbol.className = 'fas fa-times';
+          break;
+        case 'warning':
+          iconSymbol.className = 'fas fa-exclamation-triangle';
+          break;
+      }
+
+      titleEl.textContent = title;
+      messageEl.textContent = message;
+      
+      popup.classList.add('show');
+      
+      // Store callback for later use
+      popup.callback = callback;
+    }
+
+    function closePopup() {
+      const popup = document.getElementById('customPopup');
+      popup.classList.remove('show');
+      
+      // Execute callback if exists
+      if (popup.callback && typeof popup.callback === 'function') {
+        popup.callback();
+        popup.callback = null;
+      }
+    }
+
+    // Form switching functions
+    function showLoginForm() {
+      document.getElementById('loginForm').classList.add('active');
+      document.getElementById('registerForm').classList.remove('active');
+    }
+
+    function showRegisterForm() {
+      document.getElementById('loginForm').classList.remove('active');
+      document.getElementById('registerForm').classList.add('active');
+    }
+
+    function scrollToLoginForm() {
+      document.getElementById('authForm').scrollIntoView({ 
+        behavior: 'smooth',
+        block: 'center'
+      });
+    }
+
+    // License verification
+    function setupLicenseVerification() {
+      const licenseInput = document.getElementById('licenseNumber');
+      const statusEl = document.getElementById('licenseStatus');
+      
+      licenseInput.addEventListener('input', function() {
+        const license = this.value.trim();
+        
+        if (license.length === 0) {
+          statusEl.className = 'verification-status';
+          return;
+        }
+
+        if (license.length < 5) {
+          statusEl.className = 'verification-status checking';
+          statusEl.textContent = 'กรุณากรอกให้ครบ 5 หลัก';
+          return;
+        }
+
+        // Simulate API call
+        statusEl.className = 'verification-status checking';
+        statusEl.innerHTML = 'กำลังตรวจสอบ... <div class="loading-indicator"></div>';
+
+        setTimeout(() => {
+          if (mockMedicalLicenseDB[license]) {
+            statusEl.className = 'verification-status valid';
+            statusEl.textContent = `✓ ตรวจสอบแล้ว: ${mockMedicalLicenseDB[license].name}`;
+          } else {
+            statusEl.className = 'verification-status invalid';
+            statusEl.textContent = '✗ ไม่พบเลขใบประกอบวิชาชีพนี้';
+          }
+          updateRegisterButton();
+        }, 1500);
+      });
+    }
+
+    // Form validation
+    function setupFormValidation() {
+      const registerForm = document.getElementById('registerFormElement');
+      const inputs = registerForm.querySelectorAll('input, select');
+      
+      inputs.forEach(input => {
+        input.addEventListener('input', updateRegisterButton);
+        input.addEventListener('change', updateRegisterButton);
+      });
+
+      // Password confirmation validation
+      const password = document.getElementById('registerPassword');
+      const confirmPassword = document.getElementById('confirmPassword');
+      
+      confirmPassword.addEventListener('input', function() {
+        if (this.value !== password.value) {
+          this.style.borderColor = '#e74c3c';
+        } else {
+          this.style.borderColor = '#27ae60';
+        }
+        updateRegisterButton();
+      });
+    }
+
+    function updateRegisterButton() {
+      const registerBtn = document.getElementById('registerBtn');
+      const form = document.getElementById('registerFormElement');
+      
+      if (!registerBtn || !form) {
+        console.warn('Register button or form not found');
+        return;
+      }
+      
+      const formData = new FormData(form);
+      
+      const firstName = formData.get('firstName');
+      const lastName = formData.get('lastName');
+      const email = formData.get('email');
+      const licenseNumber = formData.get('licenseNumber');
+      const hospital = formData.get('hospital');
+      const username = formData.get('username');
+      const password = formData.get('password');
+      const confirmPassword = formData.get('confirmPassword');
+      
+      const isLicenseValid = mockMedicalLicenseDB[licenseNumber];
+      const isPasswordMatch = password === confirmPassword && password.length >= 6;
+      const isUsernameUnique = !usersDatabase.find(u => u.username === username);
+      const isEmailUnique = !usersDatabase.find(u => u.email === email);
+      
+      const isFormValid = firstName && lastName && email && licenseNumber && 
+                         hospital && username && password && confirmPassword &&
+                         isLicenseValid && isPasswordMatch && isUsernameUnique && isEmailUnique;
+      
+      registerBtn.disabled = !isFormValid;
+    }
+
+    // Authentication functions
+    function authenticateUser(username, password) {
+      return usersDatabase.find(user => 
+        user.username === username && 
+        atob(user.password) === password && 
+        user.isActive
+      );
+    }
+
+    function createUser(userData) {
+      const newUser = {
+        id: Date.now(),
+        firstName: userData.firstName,
+        lastName: userData.lastName,
+        email: userData.email,
+        licenseNumber: userData.licenseNumber,
+        hospital: userData.hospital,
+        username: userData.username,
+        password: btoa(userData.password),
+        registeredAt: new Date().toISOString(),
+        isActive: true
+      };
+      
+      usersDatabase.push(newUser);
+      saveToDatabase();
+      return newUser;
+    }
+
+    // UI Updates
+    function updateUIForLoggedInUser() {
+      const authSection = document.getElementById('authSection');
+      
+      // ตรวจสอบว่า authSection มีอยู่หรือไม่
+      if (!authSection) {
+        console.log('authSection not found - this is expected on login page');
+        return;
+      }
+      
+      const menuItems = document.querySelectorAll('.menu-item');
+      
+      if (currentUser) {
+        // Show user menu
+        authSection.innerHTML = `
+          <div class="user-menu">
+            <button class="user-btn" onclick="toggleUserDropdown()">
+              <i class="fas fa-user-doctor"></i>
+              ${currentUser.firstName} ${currentUser.lastName}
+              <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="user-dropdown" id="userDropdown">
+              <a href="#" onclick="showProfile()">
+                <i class="fas fa-user"></i> ข้อมูลส่วนตัว
+              </a>
+              <a href="#" onclick="showSettings()">
+                <i class="fas fa-cog"></i> ตั้งค่า
+              </a>
+              <div class="divider"></div>
+              <a href="#" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i> ออกจากระบบ
+              </a>
+            </div>
+          </div>
+        `;
+        
+        // Enable menu items
+        menuItems.forEach(item => {
+          item.classList.remove('restricted');
+        });
+      
+        // Hide auth form if exists
+        const authForm = document.getElementById('authForm');
+        if (authForm) {
+          authForm.style.display = 'none';
+        }
+      
+      } else {
+        // Show login button
+        authSection.innerHTML = '<a href="login.html" class="login-btn">เข้าสู่ระบบ</a>';
+      
+        // Disable menu items
+        menuItems.forEach(item => {
+          item.classList.add('restricted');
+        });
+      
+        // Show auth form if exists
+        const authForm = document.getElementById('authForm');
+        if (authForm) {
+          authForm.style.display = 'block';
+        }
+      }
+      
+      updateDebugPanel();
+    }
+
+    function toggleUserDropdown() {
+      const dropdown = document.getElementById('userDropdown');
+      dropdown.classList.toggle('show');
+      
+      // Close dropdown when clicking outside
+      document.addEventListener('click', function closeDropdown(e) {
+        if (!e.target.closest('.user-menu')) {
+          dropdown.classList.remove('show');
+          document.removeEventListener('click', closeDropdown);
+        }
+      });
+    }
+
+    function logout() {
+      currentUser = null;
+      localStorage.removeItem('currentMedicalUser');
+      localStorage.removeItem('rememberMedicalUser');
+      sessionStorage.removeItem('currentMedicalUser');
+      updateUIForLoggedInUser();
+      showPopup('success', 'ออกจากระบบ', 'ออกจากระบบเรียบร้อยแล้ว');
+    }
+
+    function checkAccess(page) {
+      if (!currentUser) {
+        showPopup('warning', 'จำเป็นต้องเข้าสู่ระบบ', 'กรุณาเข้าสู่ระบบก่อนเข้าใช้งาน', () => {
+          scrollToLoginForm();
+        });
+        return false;
+      }
+      
+      // In real application, redirect to the page
+      showPopup('success', 'เข้าถึงได้', `กำลังไปยังหน้า ${page}`);
+      return true;
+    }
+
+    function showProfile() {
+      if (!currentUser) return;
+      showPopup('info', 'ข้อมูลส่วนตัว', `ชื่อ: ${currentUser.firstName} ${currentUser.lastName}\nอีเมล: ${currentUser.email}\nโรงพยาบาล: ${currentUser.hospital}`);
+    }
+
+    function showSettings() {
+      showPopup('info', 'ตั้งค่า', 'หน้าตั้งค่ายังไม่พร้อมใช้งาน');
+    }
+
+    // Form submission handlers
+    document.getElementById('loginFormElement').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const loginBtn = document.getElementById('loginBtn');
+      const originalText = loginBtn.innerHTML;
+      loginBtn.innerHTML = 'กำลังเข้าสู่ระบบ... <div class="loading-indicator"></div>';
+      loginBtn.disabled = true;
+      
+      const formData = new FormData(this);
+      const username = formData.get('username').trim();
+      const password = formData.get('password');
+      const rememberMe = formData.get('rememberMe');
+      
+      console.log('Login attempt:', { username, password, usersCount: usersDatabase.length });
+      
+      // Add a small delay to show loading state
+      setTimeout(() => {
+        const user = authenticateUser(username, password);
+        
+       if (user) {
+  currentUser = user;
+  
+  if (rememberMe) {
+    localStorage.setItem('rememberMedicalUser', JSON.stringify(user));
+    localStorage.setItem('currentMedicalUser', JSON.stringify(user));
+  } else {
+    sessionStorage.setItem('currentMedicalUser', JSON.stringify(user));
+  }
+  
+  updateUIForLoggedInUser();
+  showPopup('success', 'เข้าสู่ระบบสำเร็จ', `ยินดีต้อนรับ คุณ${user.firstName} ${user.lastName}`);
+
+  this.reset();
+  
+  setTimeout(() => {
+    window.location.href = 'homepage.html';
+  }, 1200);
+  
+} else {
+  showPopup('error', 'เข้าสู่ระบบไม่สำเร็จ', 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง\nกรุณาลองใช้: doctor1 / 123456');
+} 
+        loginBtn.innerHTML = originalText;
+        loginBtn.disabled = false;
+        
+      }, 800);
+    });
+
+    document.getElementById('registerFormElement').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const registerBtn = document.getElementById('registerBtn');
+      registerBtn.innerHTML = 'กำลังสมัครสมาชิก... <div class="loading-indicator"></div>';
+      registerBtn.disabled = true;
+      
+      const formData = new FormData(this);
+      const userData = {
+        firstName: formData.get('firstName'),
+        lastName: formData.get('lastName'),
+        email: formData.get('email'),
+        licenseNumber: formData.get('licenseNumber'),
+        hospital: formData.get('hospital'),
+        username: formData.get('username'),
+        password: formData.get('password')
+      };
+      
+      setTimeout(() => {
+        // Check for duplicate username or email
+        if (usersDatabase.find(u => u.username === userData.username)) {
+          showPopup('error', 'ไม่สามารถสมัครได้', 'ชื่อผู้ใช้นี้มีอยู่ในระบบแล้ว');
+        } else if (usersDatabase.find(u => u.email === userData.email)) {
+          showPopup('error', 'ไม่สามารถสมัครได้', 'อีเมลนี้มีอยู่ในระบบแล้ว');
+        } else if (!mockMedicalLicenseDB[userData.licenseNumber]) {
+          showPopup('error', 'ไม่สามารถสมัครได้', 'เลขใบประกอบวิชาชีพไม่ถูกต้อง');
+        } else {
+          const newUser = createUser(userData);
+          showPopup('success', 'สมัครสมาชิกสำเร็จ', 'บัญชีของคุณได้ถูกสร้างเรียบร้อยแล้ว กรุณาเข้าสู่ระบบ', () => {
+            showLoginForm();
+          });
+        }
+        
+        registerBtn.innerHTML = 'สมัครสมาชิก';
+        registerBtn.disabled = false;
+        this.reset();
+        document.getElementById('licenseStatus').className = 'verification-status';
+      }, 1500);
+    });
+
+    // Close popup when clicking outside
+    document.getElementById('customPopup').addEventListener('click', function(e) {
+      if (e.target === this) {
+        closePopup();
+      }
+    });
+
+    // Keyboard shortcuts
+    document.addEventListener('keydown', function(e) {
+      // Close popup with Escape key
+      if (e.key === 'Escape') {
+        closePopup();
+      }
+    });
+  </script>
+</body>
+</html>
