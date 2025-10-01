@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="th">
 <head>
@@ -185,7 +186,6 @@
       background: rgba(57, 172, 149, 0.2);
       border-radius: 15px;
       padding: 20px;
-      cursor: pointer;
       transition: all 0.3s;
       border: 2px solid transparent;
     }
@@ -217,6 +217,52 @@
       margin-bottom: 8px;
       color: #2c3e50;
       text-align: center;
+    }
+
+    .medicine-info-editable {
+      background: #fff;
+      border-radius: 6px;
+      padding: 10px;
+      margin-bottom: 8px;
+      border: 1px solid #ddd;
+    }
+
+    .editable-input {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-family: "K2D", sans-serif;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+
+    .editable-input:focus {
+      outline: 2px solid #39AC95;
+      border-color: #39AC95;
+    }
+
+    .editable-input.warning {
+      border-color: #f39c12;
+      background: #fff3cd;
+    }
+
+    .editable-input.error {
+      border-color: #e74c3c;
+      background: #f8d7da;
+    }
+
+    .recommended-dose {
+      background: #e8f5e9;
+      border-left: 4px solid #4caf50;
+      padding: 12px;
+      margin: 15px 0;
+      border-radius: 5px;
+      font-size: 14px;
+    }
+
+    .recommended-dose strong {
+      color: #2e7d32;
     }
 
     .calculate-button {
@@ -349,6 +395,40 @@
       display: block;
     }
 
+    .warning-message {
+      background: #fff3cd;
+      border-left: 4px solid #f39c12;
+      padding: 12px;
+      margin: 10px 0;
+      border-radius: 5px;
+      font-size: 13px;
+      color: #856404;
+    }
+
+    .warning-message i {
+      margin-right: 8px;
+    }
+
+    .override-note {
+      background: #e8f4fd;
+      border-left: 4px solid #2196f3;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 5px;
+      font-size: 13px;
+    }
+
+    .override-reason {
+      width: 100%;
+      padding: 8px;
+      margin-top: 8px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-family: "K2D", sans-serif;
+      resize: vertical;
+      min-height: 60px;
+    }
+
     @media (max-width: 768px) {
       .medicine-cards {
         grid-template-columns: 1fr;
@@ -474,6 +554,15 @@
       box-shadow: 0 8px 20px rgba(57, 172, 149, 0.3);
     }
 
+    .popup-btn.secondary {
+      background: #e0e0e0;
+      color: #666;
+    }
+
+    .popup-btn.secondary:hover {
+      background: #d0d0d0;
+    }
+
     .popup-close {
       position: absolute;
       top: 15px;
@@ -589,26 +678,6 @@
     </div>
   </div>
 
-  <div id="selectedDrugDisplay" style="display: none;">
-    <div class="selected-drug-info">
-      <div class="selected-drug-name" id="preSelectedDrugName"></div>
-      <div class="selected-drug-details">
-        <div class="drug-detail-row">
-          <span class="drug-label">สารสำคัญ:</span> <span id="preSelectedDrugIngredient"></span>
-        </div>
-        <div class="drug-detail-row">
-          <span class="drug-label">ประเภท:</span> <span id="preSelectedDrugType"></span>
-        </div>
-        <div class="drug-detail-row">
-          <span class="drug-label">ความถี่:</span> <span id="preSelectedDrugFreq"></span>
-        </div>
-        <div class="drug-detail-row">
-          <span class="drug-label">ขนาดยา:</span> <span id="preSelectedDrugDosage"></span>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <div class="patient-selection">
     <div class="patient-row">
       <span class="patient-label">ผู้ป่วย:</span>
@@ -628,8 +697,10 @@
       <span>คำนวณปริมาณยา</span>
     </div>
 
+    <div id="recommendedDoseDisplay" style="display: none;"></div>
+
     <div class="medicine-cards">
-      <div class="medicine-card" onclick="selectMedicine(1)" id="medicine-1">
+      <div class="medicine-card" id="medicine-1">
         <div class="card-header">ข้อมูลผู้ป่วย</div>
         <div class="medicine-info">ชื่อ: <span id="displayName">-</span></div>
         <div class="medicine-info">อายุ: <span id="displayAge">-</span></div>
@@ -637,12 +708,26 @@
         <div class="medicine-info">โรคประจำตัว: <span id="displayDisease">-</span></div>
       </div>
 
-      <div class="medicine-card" onclick="selectMedicine(2)" id="medicine-2">
+      <div class="medicine-card" id="medicine-2">
         <div class="card-header">ข้อมูลยา</div>
         <div class="medicine-info">ชื่อยา: <span id="selectedMedicineName">-</span></div>
         <div class="medicine-info">ประเภท: <span id="selectedMedicineType">-</span></div>
-        <div class="medicine-info">ความถี่: <span id="selectedMedicineFreq">-</span></div>
-        <div class="medicine-info">ขนาดยา: <span id="selectedMedicineDosage">-</span></div>
+        <div class="medicine-info-editable">
+          <label style="font-weight: 600; display: block; margin-bottom: 5px;">ความถี่ (ครั้ง/วัน):</label>
+          <input type="number" id="frequencyInput" class="editable-input" placeholder="เช่น 3" min="1" max="6" step="1" oninput="validateDosage()">
+        </div>
+        <div class="medicine-info-editable">
+          <label style="font-weight: 600; display: block; margin-bottom: 5px;">ขนาดยาต่อครั้ง (mg):</label>
+          <input type="number" id="dosageInput" class="editable-input" placeholder="เช่น 500" min="1" step="1" oninput="validateDosage()">
+        </div>
+      </div>
+    </div>
+
+    <div id="warningDisplay" style="display: none;"></div>
+    <div id="overrideSection" style="display: none;">
+      <div class="override-note">
+        <strong><i class="fas fa-info-circle"></i> หมายเหตุการปรับแก้ขนาดยา</strong>
+        <textarea id="overrideReason" class="override-reason" placeholder="กรุณาระบุเหตุผลในการปรับแก้ขนาดยา (จำเป็น)..."></textarea>
       </div>
     </div>
 
@@ -667,6 +752,22 @@
     <button class="close-modal" onclick="closeMedicineModal()">ปิด</button>
   </div>
 </div>
+
+<div class="popup-overlay" id="warningPopup">
+  <div class="popup-container">
+    <button class="popup-close" onclick="closeWarningPopup()"><i class="fas fa-times"></i></button>
+    <div class="popup-header">
+      <div class="popup-icon warning"><i class="fas fa-exclamation-triangle"></i></div>
+      <div class="popup-title">คำเตือน</div>
+    </div>
+    <div class="popup-message" id="warningPopupMsg"></div>
+    <div class="popup-buttons">
+      <button class="popup-btn primary" onclick="proceedWithWarning()">ดำเนินการต่อ</button>
+      <button class="popup-btn secondary" onclick="closeWarningPopup()">ยกเลิก</button>
+    </div>
+  </div>
+</div>
+
 <div class="popup-overlay" id="logoutPopup">
   <div class="popup-container">
     <button class="popup-close" onclick="closeLogoutPopup()"><i class="fas fa-times"></i></button>
@@ -677,10 +778,11 @@
     <div class="popup-message">คุณต้องการออกจากระบบหรือไม่?</div>
     <div class="popup-buttons">
       <button class="popup-btn primary" onclick="confirmLogout()">ตกลง</button>
-      <button class="popup-btn primary" onclick="closeLogoutPopup()">ยกเลิก</button>
+      <button class="popup-btn secondary" onclick="closeLogoutPopup()">ยกเลิก</button>
     </div>
   </div>
 </div>
+
 <div class="popup-overlay" id="resultPopup">
   <div class="popup-container">
     <button class="popup-close" onclick="closeResultPopup()"><i class="fas fa-times"></i></button>
@@ -694,6 +796,7 @@
     </div>
   </div>
 </div>
+
 <script>
 function getCurrentUser() {
   let user =
@@ -786,16 +889,41 @@ document.addEventListener('DOMContentLoaded', function() {
     localStorage.setItem('currentMedicalUser', rememberedUser);
     updateUIForLoggedInUser();
   }
+  
+  checkLoginAndLoadData();
 });
+
+function checkLoginAndLoadData() {
+  const currentUser = getCurrentUser();
+  if (!currentUser) {
+    showResultPopup('กรุณาเข้าสู่ระบบ', 'คุณต้องเข้าสู่ระบบก่อนใช้งานหน้านี้');
+    setTimeout(() => {
+      window.location.href = 'login.html';
+    }, 2000);
+    return false;
+  }
+  return true;
+}
 
 let selectedPatient = null;
 let selectedMedicine = null;
+let recommendedDoseRange = null;
+let hasOverride = false;
+let warningProceed = false;
+
+const medicineGuidelines = {
+  "พาราเซตามอล": { minMgKg: 10, maxMgKg: 15, frequency: 4, tabletSize: 500 },
+  "ไอบูโพรเฟน": { minMgKg: 5, maxMgKg: 10, frequency: 3, tabletSize: 200 },
+  "อะม็อกซิซิลลิน": { minMgKg: 20, maxMgKg: 40, frequency: 3, tabletSize: 250 },
+  "เซฟาเล็กซิน": { minMgKg: 15, maxMgKg: 25, frequency: 4, tabletSize: 250 },
+  "โอเมพราโซล": { minMgKg: 0.5, maxMgKg: 1.5, frequency: 1, tabletSize: 20 }
+};
 
 const availableMedicines = [
   { 
     name: "พาราเซตามอล (Paracetamol)", 
     type: "ยาแก้ปวด ลดไข้", 
-    frequency: "3-4 ครั้ง/วัน", 
+    frequency: "4 ครั้ง/วัน", 
     dosage: "500-1000mg", 
     activeIngredient: "Paracetamol 500mg",
     tabletSize: "500mg",
@@ -804,7 +932,7 @@ const availableMedicines = [
   { 
     name: "ไอบูโพรเฟน (Ibuprofen)", 
     type: "ยาต้านการอักเสบ", 
-    frequency: "2-3 ครั้ง/วัน", 
+    frequency: "3 ครั้ง/วัน", 
     dosage: "200-400mg", 
     activeIngredient: "Ibuprofen 200mg",
     tabletSize: "200mg",
@@ -831,7 +959,7 @@ const availableMedicines = [
   { 
     name: "โอเมพราโซล (Omeprazole)", 
     type: "ยารักษากรดไหลย้อน", 
-    frequency: "1-2 ครั้ง/วัน", 
+    frequency: "1 ครั้ง/วัน", 
     dosage: "20-40mg", 
     activeIngredient: "Omeprazole 20mg",
     tabletSize: "20mg",
@@ -897,7 +1025,6 @@ function selectPatient(patient, index) {
   console.log('เลือกผู้ป่วย:', patient);
   
   document.getElementById("patientName").value = patient.name;
-  
   document.getElementById("displayName").textContent = patient.name;
   document.getElementById("displayAge").textContent = patient.age + " ปี";
   document.getElementById("displayWeight").textContent = patient.weight + " กก.";
@@ -907,11 +1034,23 @@ function selectPatient(patient, index) {
   
   closePatientModal();
   updateCalculateButton();
+  
+  if (selectedMedicine) {
+    calculateDosageInfo();
+    
+
+    if (recommendedDoseRange) {
+        const avgDosePerTime = (recommendedDoseRange.minDosePerTime + recommendedDoseRange.maxDosePerTime) / 2;
+        document.getElementById("frequencyInput").value = recommendedDoseRange.frequency;
+        document.getElementById("dosageInput").value = Math.round(avgDosePerTime);
+        validateDosage();
+    }
+  }
 }
 
 function selectMedicine(cardNum) {
   if (cardNum === 1) {
-    openPatientModal();
+    openPatintModal();
   } else if (cardNum === 2) {
     openMedicineModal();
   }
@@ -956,88 +1095,263 @@ function closeMedicineModal() {
 }
 
 function selectMedicineFromModal(medicine) {
-  selectedMedicine = medicine;
-  console.log('เลือกยา:', medicine);
+  selectedMedicine = medicine;
+  console.log('เลือกยา:', medicine);
+  localStorage.setItem('selectedMedicine', JSON.stringify(medicine));
+  
+  document.getElementById('medicineInput').value = medicine.name;
+  
+  document.getElementById("selectedMedicineName").textContent = medicine.name;
+  document.getElementById("selectedMedicineType").textContent = medicine.type || '-';
+  document.getElementById("medicine-2").classList.add("selected");
+  
+  closeMedicineModal();
+  updateCalculateButton();
+  
+  if (selectedPatient) {
+    calculateDosageInfo();
+    
+    if (recommendedDoseRange) {
+      const avgDosePerTime = (recommendedDoseRange.minDosePerTime + recommendedDoseRange.maxDosePerTime) / 2;
+      document.getElementById("frequencyInput").value = recommendedDoseRange.frequency;
+      document.getElementById("dosageInput").value = Math.round(avgDosePerTime);
+      
+      validateDosage(); 
+    }
+  } else {
+    document.getElementById("frequencyInput").value = '';
+    document.getElementById("dosageInput").value = '';
+    document.getElementById("recommendedDoseDisplay").style.display = 'none';
+    document.getElementById("warningDisplay").style.display = 'none';
+    document.getElementById("overrideSection").style.display = 'none';
+    hasOverride = false;
+    warningProceed = false;
+  }
+}
+
+function calculateDosageInfo() {
+  if (!selectedPatient || !selectedMedicine) {
+      document.getElementById("recommendedDoseDisplay").style.display = 'none';
+      return;
+  }
   
-  document.getElementById('medicineInput').value = medicine.name;
+  const weight = parseFloat(selectedPatient.weight);
+  const age = parseInt(selectedPatient.age);
   
-  document.getElementById("selectedMedicineName").textContent = medicine.name;
-  document.getElementById("selectedMedicineType").textContent = medicine.type || '-';
-  document.getElementById("selectedMedicineFreq").textContent = medicine.frequency || '-';
-  document.getElementById("selectedMedicineDosage").textContent = medicine.tabletSize || medicine.dosage || '-';
+  let guideline = null;
+  for (const [key, value] of Object.entries(medicineGuidelines)) {
+    if (selectedMedicine.name.includes(key)) {
+      guideline = value;
+      break;
+    }
+  }
   
-  document.getElementById("medicine-2").classList.add("selected");
+  // ใช้ guideline พื้นฐานถ้าไม่พบ
+  if (!guideline) {
+    guideline = { minMgKg: 10, maxMgKg: 15, frequency: 3, tabletSize: 500 };
+  }
   
-  closeMedicineModal();
-  updateCalculateButton();
+  let adjustedMin = guideline.minMgKg;
+  let adjustedMax = guideline.maxMgKg;
+  
+  if (age < 2) {
+    adjustedMin *= 0.8;
+    adjustedMax *= 0.8;
+  } else if (age > 65) {
+    adjustedMin *= 0.9;
+    adjustedMax *= 0.9;
+  }
+  
+  const minDailyDose = weight * adjustedMin;
+  const maxDailyDose = weight * adjustedMax;
+  const minDosePerTime = minDailyDose / guideline.frequency;
+  const maxDosePerTime = maxDailyDose / guideline.frequency;
+  
+  recommendedDoseRange = {
+    minDosePerTime: minDosePerTime,
+    maxDosePerTime: maxDosePerTime,
+    frequency: guideline.frequency,
+    minDailyDose: minDailyDose,
+    maxDailyDose: maxDailyDose
+  };
+  
+  const displayDiv = document.getElementById("recommendedDoseDisplay");
+  displayDiv.innerHTML = `
+    <div class="recommended-dose">
+      <strong><i class="fas fa-info-circle"></i> แนะนำจาก Guideline:</strong><br>
+      • ขนาดยาต่อครั้ง: ${minDosePerTime.toFixed(1)} - ${maxDosePerTime.toFixed(1)} mg<br>
+      • ความถี่: ${guideline.frequency} ครั้ง/วัน<br>
+      • ขนาดรวมต่อวัน: ${minDailyDose.toFixed(1)} - ${maxDailyDose.toFixed(1)} mg
+    </div>
+  `;
+  displayDiv.style.display = 'block';
+  
+  validateDosage();
+}
+
+function validateDosage() {
+  if (!recommendedDoseRange) return;
+  
+  const frequencyInput = document.getElementById("frequencyInput");
+  const dosageInput = document.getElementById("dosageInput");
+  const warningDisplay = document.getElementById("warningDisplay");
+  const overrideSection = document.getElementById("overrideSection");
+  
+  const frequency = parseFloat(frequencyInput.value);
+  const dosagePerTime = parseFloat(dosageInput.value);
+  
+  if (!frequency || !dosagePerTime) {
+    warningDisplay.style.display = 'none';
+    overrideSection.style.display = 'none';
+    hasOverride = false;
+    return;
+  }
+  
+  const totalDaily = frequency * dosagePerTime;
+  let warnings = [];
+  
+  frequencyInput.classList.remove('warning', 'error');
+  dosageInput.classList.remove('warning', 'error');
+  
+  if (dosagePerTime < recommendedDoseRange.minDosePerTime * 0.7) {
+    warnings.push(`⚠️ ขนาดยาต่อครั้งต่ำกว่าที่แนะนำมาก (แนะนำ: ${recommendedDoseRange.minDosePerTime.toFixed(1)} - ${recommendedDoseRange.maxDosePerTime.toFixed(1)} mg)`);
+    dosageInput.classList.add('error');
+  } else if (dosagePerTime < recommendedDoseRange.minDosePerTime) {
+    warnings.push(`⚠️ ขนาดยาต่อครั้งต่ำกว่าที่แนะนำเล็กน้อย (แนะนำ: ${recommendedDoseRange.minDosePerTime.toFixed(1)} - ${recommendedDoseRange.maxDosePerTime.toFixed(1)} mg)`);
+    dosageInput.classList.add('warning');
+  } else if (dosagePerTime > recommendedDoseRange.maxDosePerTime * 1.3) {
+    warnings.push(`⚠️ ขนาดยาต่อครั้งสูงกว่าที่แนะนำมาก (แนะนำ: ${recommendedDoseRange.minDosePerTime.toFixed(1)} - ${recommendedDoseRange.maxDosePerTime.toFixed(1)} mg)`);
+    dosageInput.classList.add('error');
+  } else if (dosagePerTime > recommendedDoseRange.maxDosePerTime) {
+    warnings.push(`⚠️ ขนาดยาต่อครั้งสูงกว่าที่แนะนำเล็กน้อย (แนะนำ: ${recommendedDoseRange.minDosePerTime.toFixed(1)} - ${recommendedDosePerTime.toFixed(1)} mg)`);
+    dosageInput.classList.add('warning');
+  }
+  
+  if (frequency !== recommendedDoseRange.frequency) {
+    warnings.push(`⚠️ ความถี่แตกต่างจากที่แนะนำ (แนะนำ: ${recommendedDoseRange.frequency} ครั้ง/วัน)`);
+    frequencyInput.classList.add('warning');
+  }
+  
+  if (totalDaily > recommendedDoseRange.maxDailyDose * 1.2) {
+    warnings.push(`⚠️ ขนาดรวมต่อวันสูงเกินไป (${totalDaily.toFixed(1)} mg > แนะนำ ${recommendedDoseRange.maxDailyDose.toFixed(1)} mg)`);
+  } else if (totalDaily < recommendedDoseRange.minDailyDose * 0.8) {
+    warnings.push(`⚠️ ขนาดรวมต่อวันต่ำเกินไป (${totalDaily.toFixed(1)} mg < แนะนำ ${recommendedDoseRange.minDailyDose.toFixed(1)} mg)`);
+  }
+  
+  if (warnings.length > 0) {
+    warningDisplay.innerHTML = warnings.map(w => `<div class="warning-message">${w}</div>`).join('');
+    warningDisplay.style.display = 'block';
+    overrideSection.style.display = 'block';
+    hasOverride = true;
+  } else {
+    warningDisplay.style.display = 'none';
+    overrideSection.style.display = 'none';
+    hasOverride = false;
+    warningProceed = false; 
+  }
 }
 
 function updateCalculateButton() {
-  const btn = document.getElementById("calculateBtn");
-  if (selectedPatient && selectedMedicine) {
-    btn.disabled = false;
-    btn.style.background = "#2c3e50";
-  } else {
-    btn.disabled = true;
-    btn.style.background = "#95a5a6";
-  }
+    const calculateBtn = document.getElementById('calculateBtn');
+    const patientData = JSON.parse(localStorage.getItem('currentMedicalUser')); 
+    const selectedMedicine = JSON.parse(localStorage.getItem('selectedMedicine'));
+
+    if (patientData && selectedMedicine) { 
+        calculateBtn.disabled = false;
+    } else {
+        calculateBtn.disabled = true;
+    }
+}
+
+function closeWarningPopup() {
+  document.getElementById('warningPopup').classList.remove('show');
+  warningProceed = false;
+}
+
+function proceedWithWarning() {
+  const reason = document.getElementById('overrideReason').value.trim();
+  if (!reason) {
+    closeWarningPopup();
+    showResultPopup('กรุณาระบุเหตุผล', 'กรุณาระบุเหตุผลของท่านก่อนทำการดำเนินการต่อ');
+    return;
+  }
+
+  warningProceed = true; 
+  closeWarningPopup();
+  proceedCalculation();
 }
 
 function calculateDosage() {
-  if (!selectedPatient || !selectedMedicine) {
-    alert("กรุณาเลือกผู้ป่วยและยาก่อน");
-    return;
-  }
+  if (!selectedPatient || !selectedMedicine) {
+    alert("กรุณาเลือกผู้ป่วยและยาก่อน");
+    return;
+  }
 
+  const frequency = parseFloat(document.getElementById("frequencyInput").value);
+  const dosagePerTime = parseFloat(document.getElementById("dosageInput").value);
+  
+  if (!frequency || !dosagePerTime) {
+    alert("กรุณากรอกความถี่และขนาดยา");
+    return;
+  }
+
+  if (hasOverride) { 
+    const reason = document.getElementById('overrideReason').value.trim();
+    if (!reason && !warningProceed) {
+        showResultPopup('กรุณาระบุเหตุผล', 'เนื่องจากมีการปรับแก้ขนาดยาที่แตกต่างจากค่าแนะนำ กรุณาระบุเหตุผลของท่านก่อนทำการดำเนินการต่อ');
+        return;
+    }
+
+    if (!warningProceed) {
+        const warningMessages = Array.from(document.getElementById("warningDisplay").querySelectorAll('.warning-message'))
+        .map(div => div.textContent.replace('⚠️ ', '• ')).join('\n');
+        
+        document.getElementById('warningPopupMsg').textContent = 
+          `คุณได้ปรับแก้ขนาดยาที่แตกต่างจากคำแนะนำ:\n${warningMessages}\n\nกรุณายืนยันการปรับแก้`;
+        document.getElementById('warningPopup').classList.add('show');
+        return;
+    }
+  }
+  
+  proceedCalculation(); 
+  return; 
+}
+
+function proceedCalculation() {
   console.log('เริ่มคำนวณ:');
   console.log('ผู้ป่วย:', selectedPatient);
   console.log('ยา:', selectedMedicine);
 
   const weight = parseFloat(selectedPatient.weight);
   const age = parseInt(selectedPatient.age);
+  const frequency = parseFloat(document.getElementById("frequencyInput").value);
+  const dosagePerTime = parseFloat(document.getElementById("dosageInput").value);
   
-  let dosagePerKg = 10;
-  let dailyDoses = 3;
-  let tabletSize = 500;
+  const totalDailyDose = frequency * dosagePerTime;
   
-  if (selectedMedicine.name.includes("พาราเซตามอล")) {
-    dosagePerKg = 15;
-    dailyDoses = 4;
-    tabletSize = 500;
-  } else if (selectedMedicine.name.includes("ไอบูโพรเฟน")) {
-    dosagePerKg = 10;
-    dailyDoses = 3;
-    tabletSize = 200;
-  } else if (selectedMedicine.name.includes("อะม็อกซิซิลลิน")) {
-    dosagePerKg = 25;
-    dailyDoses = 3;
-    tabletSize = 250;
-  } else if (selectedMedicine.name.includes("เซฟาเล็กซิน")) {
-    dosagePerKg = 20;
-    dailyDoses = 4;
-    tabletSize = 250;
-  } else if (selectedMedicine.name.includes("โอเมพราโซล")) {
-    dosagePerKg = 1;
-    dailyDoses = 1;
-    tabletSize = 20;
+  let guideline = null;
+  for (const [key, value] of Object.entries(medicineGuidelines)) {
+    if (selectedMedicine.name.includes(key)) {
+      guideline = value;
+      break;
+    }
   }
-
-  if (age < 2) dosagePerKg *= 0.8;
-  else if (age > 65) dosagePerKg *= 0.9;
-
-  const totalDailyDose = weight * dosagePerKg;
-  const dosePerTime = totalDailyDose / dailyDoses;
+  
+  const tabletSize = guideline ? guideline.tabletSize : 500;
+  const tabletsPerDose = (dosagePerTime / tabletSize); 
 
   const dosageResult = {
     totalDailyDose: totalDailyDose.toFixed(2),
-    dosePerTime: dosePerTime.toFixed(2),
-    dailyDoses: dailyDoses.toString(),
-    dosagePerKg: dosagePerKg.toFixed(1),
+    dosePerTime: dosagePerTime.toFixed(2),
+    dailyDoses: frequency.toString(),
+    dosagePerKg: (totalDailyDose / weight).toFixed(1),
     tabletSize: tabletSize,
-    tabletsPerDose: (dosePerTime / tabletSize).toFixed(2)
+    tabletsPerDose: tabletsPerDose.toFixed(2)
   };
   
   console.log('ผลการคำนวณ:', dosageResult);
+  
+  const overrideReason = hasOverride ? document.getElementById('overrideReason').value.trim() : null;
   
   const fullCalculationData = {
     patient: {
@@ -1049,24 +1363,48 @@ function calculateDosage() {
     medicine: {
       name: selectedMedicine.name,
       type: selectedMedicine.type,
-      frequency: selectedMedicine.frequency,
-      tabletSize: selectedMedicine.tabletSize || tabletSize + 'mg',
+      frequency: frequency + ' ครั้ง/วัน',
+      tabletSize: tabletSize + 'mg',
       warnings: selectedMedicine.warnings || 'ไม่มีคำเตือนเฉพาะ'
     },
     dosageResult: dosageResult,
+    recommendedRange: recommendedDoseRange,
+    override: hasOverride ? {
+      isOverride: true,
+      reason: overrideReason,
+      timestamp: new Date().toISOString(),
+      doctor: getCurrentUser() ? getCurrentUser().firstName + ' ' + (getCurrentUser().lastName || '') : 'Unknown'
+    } : null,
     timestamp: new Date().toISOString()
   };
   
   localStorage.setItem('latestCalculation', JSON.stringify(fullCalculationData));
+  
+  const history = JSON.parse(localStorage.getItem('calculationHistory') || '[]');
+  history.unshift(fullCalculationData);
+  if (history.length > 50) history.pop();
+  localStorage.setItem('calculationHistory', JSON.stringify(history));
+  
   console.log('บันทึกข้อมูลเรียบร้อย:', fullCalculationData);
 
   window.location.href = 'resultmed.html';
+  
+  warningProceed = false; 
 }
 
 window.addEventListener('storage', function(e) {
   if (e.key === 'currentMedicalUser' || e.key === 'rememberMedicalUser') {
     updateUIForLoggedInUser();
   }
+});
+
+document.getElementById('frequencyInput').addEventListener('input', () => {
+  validateDosage();
+  updateCalculateButton();
+});
+document.getElementById('dosageInput').addEventListener('input', () => {
+  validateDosage();
+  updateCalculateButton();
 });
 </script>
 </body>

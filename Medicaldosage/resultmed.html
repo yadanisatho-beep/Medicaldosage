@@ -281,7 +281,7 @@
     }
 
     .warning-section.danger .warning-item:before {
-      content: "🚫";
+      content: "";
     }
 
     .action-buttons {
@@ -608,7 +608,7 @@
         คำเตือนก่อนใช้ยา
       </div>
       <div class="warning-content" id="warningContent">
-        <div class="warning-item">กรุณาปรึกษาแพทย์ก่อนใช้ยา</div>
+        <div class="warning-item">ตรวจสอบความถูกต้องของการกรอกข้อมูลซ้ำอีกครั้ง</div>
       </div>
     </div>
 
@@ -767,7 +767,7 @@ function checkMedicineWarnings(medicineName, patientDisease) {
         if (patientDisease && patientDisease.includes(condition.replace('โรค', ''))) {
           warnings.push({
             type: 'danger',
-            message: `⚠️ ห้ามใช้ยานี้กับผู้ป่วย${condition}!`
+            message: `⚠️ ห้ามใช้ยานี้กับผู้ป่วย${condition} ⚠️`
           });
         }
       });
@@ -800,7 +800,7 @@ function displayWarnings(data) {
     
     const consultItem = document.createElement('div');
     consultItem.className = 'warning-item';
-    consultItem.textContent = 'กรุณาปรึกษาแพทย์ทันที';
+    consultItem.textContent = 'การคำนวณนี้เป็นเครื่องมือช่วยตัดสินใจเท่านั้น ปริมาณยาที่ให้ผู้ป่วยจริงต้องอยู่ภายใต้ดุลยพินิจของแพทย์ผู้รักษา';
     warningContent.appendChild(consultItem);
   } else {
     warningSection.classList.remove('danger');
@@ -835,7 +835,7 @@ function loadCalculationResult() {
   if (!data) {
     data = {
       patient: { name: 'ไม่มีข้อมูลผู้ป่วย', age: '-', weight: '-', disease: 'ไม่ระบุ' },
-      medicine: { name: 'ไม่มีข้อมูลยา', type: '-', frequency: '-', tabletSize: '-', warnings: 'กรุณาปรึกษาแพทย์ก่อนใช้ยา' },
+      medicine: { name: 'ไม่มีข้อมูลยา', type: '-', frequency: '-', tabletSize: '-', warnings: 'การคำนวณนี้เป็นเครื่องมือช่วยตัดสินใจเท่านั้น ปริมาณยาที่ให้ผู้ป่วยจริงต้องอยู่ภายใต้ดุลยพินิจของแพทย์ผู้รักษา' },
       dosageResult: { dosePerTime: 'XX.XX', totalDailyDose: 'XX.XX', dailyDoses: 'XX.XX' },
       timestamp: new Date().toISOString()
     };
